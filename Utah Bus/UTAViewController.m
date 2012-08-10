@@ -17,8 +17,8 @@
 @property (nonatomic, strong) NSArray *vehicleInfoArray;
 @property (nonatomic, strong) UtaFetcher *utaFetcher;
 @property (nonatomic, strong) LocationAnnotation *annotation;
-@property (nonatomic, strong) NSMutableArray *shape_lt;
-@property (nonatomic, strong) NSMutableArray *shape_lon;
+@property (nonatomic, strong) NSMutableArray *shape_lt; //holds the shape_pt_lat for passing to mapview overlays
+@property (nonatomic, strong) NSMutableArray *shape_lon; //holds the shape_pt_lon for passing to mapview overlays
 @end
 
 @implementation UTAViewController
@@ -32,24 +32,26 @@
 @synthesize shape_lt = _shape_lt;
 
 
-
+// getting the managedobjectcontext and lazily instantiating
 - (NSManagedObjectContext *)managedObjectContext
 {
     if (!_managedObjectContext)_managedObjectContext = [[NSManagedObjectContext alloc]init];
     return _managedObjectContext;
 }
 
+//lazy instantiation of shape_lon
 - (NSMutableArray *) shape_lon
 {
     if (!_shape_lon)_shape_lon = [[NSMutableArray alloc]init];
     return _shape_lon;
 }
-
+//lazy instantiation of shape_lt
 - (NSMutableArray *) shape_lt
 {
     if (!_shape_lt)_shape_lt = [[NSMutableArray alloc]init];
     return _shape_lt;
 }
+//lazy instantiation of the utaFetcher instance
 - (UtaFetcher *) utaFetcher
 {
     if (!_utaFetcher) _utaFetcher = [[UtaFetcher alloc] init];
@@ -76,6 +78,7 @@
     
 }
 
+//stuff to do when show buses button is tapped.
 - (IBAction)showBuses:(id)sender {
     UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     [spinner startAnimating];
@@ -83,7 +86,9 @@
     NSString *urlString = [NSString stringWithFormat:@"http://api.rideuta.com/SIRI/SIRI.svc/VehicleMonitor/ByRoute?route=%@&onwardcalls=true&usertoken=%@",self.routeName.text,UtaAPIKey];
     dispatch_queue_t xmlGetter = dispatch_queue_create("UTA xml getter", NULL);
     dispatch_async(xmlGetter, ^{
-        self.vehicleInfoArray = [self.utaFetcher executeUtaFetcher:urlString];
+    self.vehicleInfoArray = [self.utaFetcher executeUtaFetcher:urlString];
+        
+    // Here I am fetching routeID from core data entity route, based on the bus typed into the text field
         NSString *routeID = [NSString string];
         NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
         NSEntityDescription *entity = [NSEntityDescription entityForName:@"Routes"
@@ -95,6 +100,8 @@
                 routeID = [route valueForKey:@"route_id"];
             }
         }
+        
+      // Here I am fetching the shapeID from core data entity trips, based on the routeID I got from above
         NSString * shapeID = [NSString string];
         NSEntityDescription *tripsEntity = [NSEntityDescription entityForName:@"Trips"
                                                        inManagedObjectContext:self.managedObjectContext];
@@ -106,6 +113,7 @@
             }
         }
 
+       // Here I am fetching the shape_pt_lat and shape_pt_long from core data entity shapes, based on the shapeID I got above
         NSEntityDescription *shapesEntity = [NSEntityDescription entityForName:@"Shapes"
                                                         inManagedObjectContext:self.managedObjectContext];
         [fetchRequest setEntity:shapesEntity];
@@ -125,6 +133,8 @@
    
 
 }
+
+// helper method to return an array of annotations to pass to mapview during segue
 - (NSArray *) mapAnnotations
 {
     NSMutableArray *annotations = [NSMutableArray arrayWithCapacity:[self.vehicleInfoArray count]];

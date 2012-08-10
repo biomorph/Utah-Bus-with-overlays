@@ -13,6 +13,8 @@
 @synthesize managedObjectModel = _managedObjectModel;
 @synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
 
+
+//setting managedObjectContext in the UTAViewController from here when the application finishes launching
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     UITabBarController *tabController = (UITabBarController*)self.window.rootViewController;
@@ -101,7 +103,7 @@
     if (_persistentStoreCoordinator != nil) {
         return _persistentStoreCoordinator;
     }
-    
+//This is where I check if the sqlite exists or not, if it doesn't I load the UTAGTFS.sqlite and associate it with the Model core data model
     NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"UTAGTFS.sqlite"];
     
     if (![[NSFileManager defaultManager] fileExistsAtPath:[storeURL path]]) {

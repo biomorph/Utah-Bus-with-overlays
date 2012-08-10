@@ -17,8 +17,8 @@
 
 @interface UTAViewController : UIViewController <NSFetchedResultsControllerDelegate>
 
-@property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
-@property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
+@property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController; //for fetching results from coredata
+@property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;//managed object context to access coredata
 
 @property (strong, nonatomic) IBOutlet UITextField *routeName;
 

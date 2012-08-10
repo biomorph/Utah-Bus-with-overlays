@@ -38,10 +38,14 @@
     }
     return self;
 }
+
+// update method for when the annotations or mapview is updated
 -(void) updateMapView
 {
     if (self.mapView.annotations)[self.mapView removeAnnotations:self.mapView.annotations];
     if (self.annotations)[self.mapView addAnnotations:self.annotations];
+   
+// Setting the initial zoom based on the highest and lowest values of the latitudes and longitudes of the buses' locations
     if ([self.annotations count]!= 0){
     NSMutableArray *latitude = [NSMutableArray arrayWithCapacity:[self.annotations count]];
     NSMutableArray *longitude = [NSMutableArray arrayWithCapacity:[self.annotations count]];
@@ -69,7 +73,9 @@
     if (zoomRegion.span.longitudeDelta == 0) zoomRegion.span.longitudeDelta = 0.2;
     [self.mapView setRegion:zoomRegion animated:YES];
     }
-else {
+
+// protecting against a crash when utafetcher returns empty stuff for whatever reason
+    else {
     MKCoordinateRegion zoomRegion;
     zoomRegion.center.latitude = 40.760779;
     zoomRegion.center.longitude = -111.891047;
@@ -77,6 +83,8 @@ else {
     zoomRegion.span.longitudeDelta = 0.8;
     [self.mapView setRegion:zoomRegion animated:YES];
 }
+   
+// This is where i am making an array of coordinates to make an MKPolyLine out of
     NSInteger numberofSteps = [self.shape_lt count];
     CLLocationCoordinate2D coordinates [numberofSteps];
     for (NSInteger index = 0; index <numberofSteps; index++){
@@ -87,10 +95,12 @@ else {
         coordinate.longitude = longitude;
         coordinates[index] = coordinate;
     }
+// Making the mkpolyline with the coordinates array i made above
     MKPolyline *polyLine = [MKPolyline polylineWithCoordinates:coordinates count:numberofSteps];
     [self.mapView addOverlay:polyLine];
 }
 
+//setting up the annotations and customizing the rightcalloutaccessory
 - (MKAnnotationView *) mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation
 {
     if (![annotation isKindOfClass:[MKUserLocation class]]){
@@ -107,6 +117,8 @@ else {
     else return  nil;
 }
 
+
+// draw the polyline onto the map, setting line stroke width and color as well
 - (MKOverlayView *)mapView:(MKMapView *)mapView viewForOverlay:(id <MKOverlay>)overlay {
     MKPolylineView *polylineView = [[MKPolylineView alloc] initWithPolyline:overlay];
     polylineView.strokeColor = [UIColor redColor];
@@ -126,7 +138,7 @@ else {
 }
 
 
-
+// seguing to a tableviewcontroller to show the stops that the selected bus makes
 - (void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     if ([segue.identifier isEqualToString:@"show stops"]){
@@ -151,6 +163,8 @@ else {
     }
     return _locationManager;
 }
+
+// In here I am getting the users current location
 - (void)viewDidLoad
 {
     [super viewDidLoad];
