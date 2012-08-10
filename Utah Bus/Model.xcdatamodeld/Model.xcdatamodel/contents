@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1487" systemVersion="12A269" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="Routes" representedClassName="Routes" syncable="YES">
+        <attribute name="route_id" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="route_long_name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="route_short_name" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="Shapes" representedClassName="Shapes" syncable="YES">
+        <attribute name="shape_id" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="shape_pt_lat" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="shape_pt_lon" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="shape_pt_sequence" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="Stops" representedClassName="Stops" syncable="YES">
+        <attribute name="stop_code" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="stop_lat" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="stop_lon" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="stop_name" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="Trips" representedClassName="Trips" syncable="YES">
+        <attribute name="route_id" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="shape_id" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="trip_headsign" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="Routes" positionX="0" positionY="0" width="128" height="88"/>
+        <element name="Shapes" positionX="0" positionY="0" width="128" height="103"/>
+        <element name="Stops" positionX="0" positionY="0" width="128" height="103"/>
+        <element name="Trips" positionX="0" positionY="0" width="128" height="88"/>
+    </elements>
+</model>
