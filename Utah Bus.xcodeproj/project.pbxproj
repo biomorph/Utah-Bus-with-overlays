@@ -10,6 +10,7 @@
 		0740D84515D027C90075A32C /* MapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0740D84415D027C90075A32C /* MapViewController.m */; };
 		0740D84915D053B30075A32C /* LocationAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 0740D84815D053B30075A32C /* LocationAnnotation.m */; };
 		07512F5715D1BF2D00FC9D84 /* StopViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 07512F5615D1BF2D00FC9D84 /* StopViewController.m */; };
+		07615BDF15D95328003C691C /* FavoritesTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 07615BDE15D95328003C691C /* FavoritesTableViewController.m */; };
 		078EBDD115D380D800FCA1D9 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 078EBDD015D380D700FCA1D9 /* CoreData.framework */; };
 		079E2B6815D4BFF000038EC2 /* UTAGTFS.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 079E2B6715D4BFF000038EC2 /* UTAGTFS.sqlite */; };
 		07B3BA3715D460720060EA0A /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 07B3BA3515D460720060EA0A /* Model.xcdatamodeld */; };
@@ -33,6 +34,8 @@
 		0740D84815D053B30075A32C /* LocationAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocationAnnotation.m; sourceTree = "<group>"; };
 		07512F5515D1BF2D00FC9D84 /* StopViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StopViewController.h; sourceTree = "<group>"; };
 		07512F5615D1BF2D00FC9D84 /* StopViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StopViewController.m; sourceTree = "<group>"; };
+		07615BDD15D95328003C691C /* FavoritesTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FavoritesTableViewController.h; sourceTree = "<group>"; };
+		07615BDE15D95328003C691C /* FavoritesTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FavoritesTableViewController.m; sourceTree = "<group>"; };
 		078EBDD015D380D700FCA1D9 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		079E2B6715D4BFF000038EC2 /* UTAGTFS.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = UTAGTFS.sqlite; sourceTree = "<group>"; };
 		07B3BA3615D460720060EA0A /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
@@ -122,6 +125,8 @@
 				07BB7BA315CC73DA007A0531 /* MainStoryboard.storyboard */,
 				07BB7BA615CC73DA007A0531 /* UTAViewController.h */,
 				07BB7BA715CC73DA007A0531 /* UTAViewController.m */,
+				07615BDD15D95328003C691C /* FavoritesTableViewController.h */,
+				07615BDE15D95328003C691C /* FavoritesTableViewController.m */,
 				07BB7B9815CC73DA007A0531 /* Supporting Files */,
 			);
 			path = "Utah Bus";
@@ -227,6 +232,7 @@
 				0740D84915D053B30075A32C /* LocationAnnotation.m in Sources */,
 				07512F5715D1BF2D00FC9D84 /* StopViewController.m in Sources */,
 				07B3BA3715D460720060EA0A /* Model.xcdatamodeld in Sources */,
+				07615BDF15D95328003C691C /* FavoritesTableViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

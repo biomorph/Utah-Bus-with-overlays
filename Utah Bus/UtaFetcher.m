@@ -15,6 +15,7 @@
 @property (nonatomic, strong) NSString *progressRate;
 @property (nonatomic, strong) NSString *departureTime;
 @property (nonatomic, strong) NSString *directionOfVehicle;
+@property (nonatomic, strong) NSString *lineref;
 @property (nonatomic, strong) NSMutableArray *stopIdsAlongTheWay;
 @property (nonatomic, strong) NSMutableString *currentNode;
 @property (nonatomic, strong) NSDictionary *vehicleInfo;
@@ -31,6 +32,7 @@
 @synthesize progressRate = _progressRate;
 @synthesize departureTime = _departureTime;
 @synthesize directionOfVehicle = _directionOfVehicle;
+@synthesize lineref = _lineref;
 @synthesize stopIdsAlongTheWay = _stopIdsAlongTheWay;
 @synthesize currentNode = _currentNode;
 
@@ -106,7 +108,10 @@
     }
     return _directionOfVehicle;
 }
-
+- (NSString *) lineref {
+    if (!_lineref)_lineref =[[NSString alloc]init];
+    return _lineref;
+}
 - (NSMutableArray *) stopIdsAlongTheWay {
     if (!_stopIdsAlongTheWay){
         _stopIdsAlongTheWay = [[NSMutableArray alloc]init];
@@ -152,11 +157,14 @@
     if ([elementName isEqualToString:DIRECTION_OF_VEHICLE]){
         self.directionOfVehicle=self.currentNode;
     }
+    if ([elementName isEqualToString:LINE_NAME]){
+        self.lineref = self.currentNode;
+    }
     if ([elementName isEqualToString:STOP_NAME]){
         [self.stopIdsAlongTheWay addObject:self.currentNode];
     }
     if ([elementName isEqualToString:@"MonitoredVehicleJourney"]) {
-        self.vehicleInfo = [NSDictionary dictionaryWithObjectsAndKeys:self.publishedLineName,PUBLISHED_LINE_NAME,self.vehicleLatitude,LATITUDE,self.vehicleLongitude,LONGITUDE,self.progressRate,PROGRESS_RATE,self.departureTime,DEPARTURE_TIME,self.directionOfVehicle,DIRECTION_OF_VEHICLE,self.stopIdsAlongTheWay,STOP_NAME, nil];
+        self.vehicleInfo = [NSDictionary dictionaryWithObjectsAndKeys:self.publishedLineName,PUBLISHED_LINE_NAME,self.vehicleLatitude,LATITUDE,self.vehicleLongitude,LONGITUDE,self.progressRate,PROGRESS_RATE,self.departureTime,DEPARTURE_TIME,self.directionOfVehicle,DIRECTION_OF_VEHICLE,self.lineref,LINE_NAME, self.stopIdsAlongTheWay,STOP_NAME, nil];
     [self.vehicleInfoArray addObject:self.vehicleInfo];
     }
     self.currentNode = nil;
@@ -172,6 +180,7 @@
     self.progressRate = nil;
     self.departureTime = nil;
     self.directionOfVehicle = nil;
+    self.lineref = nil;
     self.stopIdsAlongTheWay =nil;
 }
 

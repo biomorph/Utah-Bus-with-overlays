@@ -18,6 +18,7 @@
 #define DIRECTION_OF_VEHICLE @"DirectionRef"
 //#define STOP_ID_ALONG_THE_WAY @"StopPointRef"
 #define STOP_NAME @"StopPointName"
+#define LINE_NAME @"LineRef"
 
 @interface UtaFetcher:NSObject <NSXMLParserDelegate>
 @property (nonatomic, strong) NSMutableArray *vehicleInfoArray;

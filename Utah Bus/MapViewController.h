@@ -14,4 +14,6 @@
 @property (nonatomic, strong) NSArray *annotations;
 @property (nonatomic, strong) NSDictionary *vehicleInfo;
 @property (nonatomic, strong) CLLocation *currentLocation;
+@property (strong, nonatomic) NSMutableArray *shape_lt;
+@property (strong, nonatomic) NSMutableArray *shape_lon;
 @end

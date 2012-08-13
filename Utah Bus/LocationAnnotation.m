@@ -40,4 +40,12 @@
     coordinate.longitude = [[self.vehicleInfo objectForKey:LONGITUDE] floatValue];
     return  coordinate;
 }
+
+- (NSString *) progress
+{
+    if ([self.vehicleInfo objectForKey:PROGRESS_RATE]){
+        return [self.vehicleInfo objectForKey:PROGRESS_RATE];
+    }
+    else return nil;
+}
 @end

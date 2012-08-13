@@ -16,8 +16,7 @@
 @property (strong, nonatomic) UIButton *typeDetailDisclosure;
 @property (strong, nonatomic) CLLocationManager *locationManager;
 @property (strong, nonatomic) NSArray *stops;
-@property (strong, nonatomic) NSMutableArray *shape_lt;
-@property (strong, nonatomic) NSMutableArray *shape_lon;
+@property (strong, nonatomic) NSString *progress;
 
 @end
 
@@ -29,6 +28,7 @@
 @synthesize currentLocation = _currentLocation;
 @synthesize locationManager = _locationManager;
 @synthesize stops = _stops;
+@synthesize progress = _progress;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -52,6 +52,7 @@
     for (LocationAnnotation *annotation in self.annotations){
         [latitude addObject:[[annotation vehicleInfo] objectForKey:LATITUDE]];
         [longitude addObject:[[annotation vehicleInfo]objectForKey:LONGITUDE]];
+        self.vehicleInfo = [annotation vehicleInfo];
     }
     NSArray* sortedlatitude = [latitude sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2){
         return ([obj1 doubleValue] < [obj2 doubleValue]);
@@ -110,12 +111,15 @@
         aView.canShowCallout = YES;
     }
     aView.annotation = annotation;
+    aView.leftCalloutAccessoryView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 30, 30)];
     self.typeDetailDisclosure = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
     aView.rightCalloutAccessoryView = self.typeDetailDisclosure;
     return aView;
     }
     else return  nil;
 }
+
+
 
 
 // draw the polyline onto the map, setting line stroke width and color as well
@@ -127,6 +131,17 @@
     return polylineView;
 }
 
+// add the current route to favorites
+- (IBAction)addToFavorites:(id)sender {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSMutableArray *favorites = [[defaults objectForKey:@"favorite.routes"] mutableCopy];
+    NSArray *routeInfo = [NSArray arrayWithObjects:[self.vehicleInfo objectForKey:PUBLISHED_LINE_NAME],[self.vehicleInfo objectForKey:LINE_NAME],nil];
+    if (!favorites) favorites = [NSMutableArray array];
+    //add only if the routeInfo returns a short and long name, the route count is checking for that here
+    if (favorites && ![favorites containsObject:routeInfo]&&[routeInfo count]!=0) [favorites addObject:routeInfo];
+    [defaults setObject:favorites forKey:@"favorite.routes"];
+    [defaults synchronize];
+}
 
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control
 {
@@ -137,6 +152,28 @@
     }
 }
 
+// assigning a colored dot based on the current progress of the bus
+- (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view
+{
+    self.vehicleInfo = [(LocationAnnotation *)view.annotation vehicleInfo];
+    NSString *progress = [self.vehicleInfo objectForKey:PROGRESS_RATE];
+    CGRect progressRect = CGRectMake(0, 0, 20, 20);
+    UIGraphicsBeginImageContext(progressRect.size);
+    CGContextBeginPath(UIGraphicsGetCurrentContext());
+    CGContextAddArc(UIGraphicsGetCurrentContext(), 10, 10, 2, 0, 2*M_PI, YES);
+    CGContextSetLineWidth(UIGraphicsGetCurrentContext(), 5.0);
+    if ([progress isEqualToString:@"0"]) [[UIColor blueColor]setStroke];
+    if ([progress isEqualToString:@"1"]) [[UIColor greenColor]setStroke];
+    if ([progress isEqualToString:@"2"]) [[UIColor orangeColor]setStroke];
+    if ([progress isEqualToString:@"3"]) [[UIColor redColor]setStroke];
+    if ([progress isEqualToString:@"4"]) [[UIColor lightGrayColor]setStroke];
+    if ([progress isEqualToString:@"5"]) [[UIColor whiteColor]setStroke];
+
+    CGContextStrokePath(UIGraphicsGetCurrentContext());
+    UIImage *progressImage = UIGraphicsGetImageFromCurrentImageContext();
+    [(UIImageView*)view.leftCalloutAccessoryView setImage:progressImage];
+    
+}
 
 // seguing to a tableviewcontroller to show the stops that the selected bus makes
 - (void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
@@ -154,6 +191,7 @@
 - (void) setAnnotations:(NSArray *)annotations
 {
     _annotations = annotations;
+    [self updateMapView];
 }
 
 - (CLLocationManager *) locationManager
