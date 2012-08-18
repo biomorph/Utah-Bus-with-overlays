@@ -16,13 +16,20 @@
 #define PROGRESS_RATE @"ProgressRate"
 #define DEPARTURE_TIME @"EstimatedDepartureTime"
 #define DIRECTION_OF_VEHICLE @"DirectionRef"
-//#define STOP_ID_ALONG_THE_WAY @"StopPointRef"
-#define STOP_NAME @"StopPointName"
+#define STOP_DIRECTION @"StopDirection"
+#define ROUTES_STOP_SERVICES @"Route"
+#define STOP_ID @"StopID"
+#define DISTANCE_TO_STOP @"DistanceToStop"
+#define STOP_NAME @"StopName"
+#define STOP_POINT_REF @"StopPointName"
 #define LINE_NAME @"LineRef"
+#define VEHICLE_AT_STOP @"VehicleAtStop"
 
 @interface UtaFetcher:NSObject <NSXMLParserDelegate>
 @property (nonatomic, strong) NSMutableArray *vehicleInfoArray;
 @property (nonatomic, strong) NSMutableArray *stopInfoArray;
-- (NSArray *) executeUtaFetcher :(NSString *) forQuery;
+- (NSArray *) executeUtaFetcher :(NSString *) forRouteQuery;
+- (NSArray *) executeFetcher:(NSString *)forStopQuery;
+- (NSArray *) executeStopFetcher : (NSString *) forStopId;
 
 @end

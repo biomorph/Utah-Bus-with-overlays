@@ -29,6 +29,8 @@
 @synthesize locationManager = _locationManager;
 @synthesize stops = _stops;
 @synthesize progress = _progress;
+@synthesize shape_lon = _shape_lon;
+@synthesize shape_lt = _shape_lt;   
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -46,12 +48,10 @@
     if (self.annotations)[self.mapView addAnnotations:self.annotations];
    
 // Setting the initial zoom based on the highest and lowest values of the latitudes and longitudes of the buses' locations
-    if ([self.annotations count]!= 0){
-    NSMutableArray *latitude = [NSMutableArray arrayWithCapacity:[self.annotations count]];
-    NSMutableArray *longitude = [NSMutableArray arrayWithCapacity:[self.annotations count]];
-    for (LocationAnnotation *annotation in self.annotations){
-        [latitude addObject:[[annotation vehicleInfo] objectForKey:LATITUDE]];
-        [longitude addObject:[[annotation vehicleInfo]objectForKey:LONGITUDE]];
+    if ([self.annotations count]!= 0 && [self.shape_lon count]!=0){
+        NSMutableArray *latitude = [NSMutableArray arrayWithArray:self.shape_lt];
+    NSMutableArray *longitude = [NSMutableArray arrayWithArray:self.shape_lon];
+        for (LocationAnnotation *annotation in self.annotations){
         self.vehicleInfo = [annotation vehicleInfo];
     }
     NSArray* sortedlatitude = [latitude sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2){
@@ -147,8 +147,8 @@
 {
     self.vehicleInfo = [(LocationAnnotation *)view.annotation vehicleInfo];
     if (self.vehicleInfo){
-        self.stops = [self.vehicleInfo objectForKey:STOP_NAME];
-        [self performSegueWithIdentifier:@"show stops" sender:view.rightCalloutAccessoryView];
+        self.stops = [self.vehicleInfo objectForKey:STOP_POINT_REF];
+        [self performSegueWithIdentifier:@"show closest stops" sender:view.rightCalloutAccessoryView];
     }
 }
 
@@ -215,6 +215,8 @@
     LocationAnnotation *la = (LocationAnnotation *) [self.annotations lastObject];
     NSString *title= la.title;
     self.navigationItem.title = title;
+    if (self.shape_lon)self.shape_lon = nil;
+    if (self.shape_lt) self.shape_lt = nil;
 	// Do any additional setup after loading the view.
 }
 

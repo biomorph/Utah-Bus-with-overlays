@@ -20,7 +20,10 @@
     UITabBarController *tabController = (UITabBarController*)self.window.rootViewController;
     UINavigationController *leftNavigationController = (UINavigationController*)[tabController.viewControllers objectAtIndex:0];
     UTAViewController *leftViewController = (UTAViewController *)leftNavigationController.topViewController;
+    UINavigationController *middleNavigationController = (UINavigationController *)[tabController.viewControllers objectAtIndex:1];
+    UTAStopMonitoringViewController *middleViewController = (UTAStopMonitoringViewController *) middleNavigationController.topViewController;
     leftViewController.managedObjectContext = self.managedObjectContext;
+    middleViewController.managedObjectContext = self.managedObjectContext;
     // Override point for customization after application launch.
     return YES;
 }

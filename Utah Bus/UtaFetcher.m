@@ -17,8 +17,17 @@
 @property (nonatomic, strong) NSString *directionOfVehicle;
 @property (nonatomic, strong) NSString *lineref;
 @property (nonatomic, strong) NSMutableArray *stopIdsAlongTheWay;
+@property (nonatomic, strong) NSString *stopDirection;
+@property (nonatomic, strong) NSString *distanceToStop;
+@property (nonatomic, strong) NSString *stopName;
+@property (nonatomic, strong) NSMutableArray *routesStopServices;
 @property (nonatomic, strong) NSMutableString *currentNode;
 @property (nonatomic, strong) NSDictionary *vehicleInfo;
+@property (nonatomic, strong) NSString *stopID;
+@property (nonatomic, strong) NSDictionary *stopInfo;
+@property (nonatomic, strong) NSString *stopLatitude;
+@property (nonatomic, strong) NSString *stopLongitude;
+@property (nonatomic, strong) NSString *atStop;
 @end
 
 
@@ -34,17 +43,27 @@
 @synthesize directionOfVehicle = _directionOfVehicle;
 @synthesize lineref = _lineref;
 @synthesize stopIdsAlongTheWay = _stopIdsAlongTheWay;
+@synthesize stopInfoArray = _stopInfoArray;
 @synthesize currentNode = _currentNode;
+@synthesize stopDirection = _stopDirection;
+@synthesize stopName = _stopName;
+@synthesize distanceToStop = _distanceToStop;
+@synthesize routesStopServices = _routesStopServices;
+@synthesize stopID = _stopID;
+@synthesize stopInfo = _stopInfo;
+@synthesize stopLatitude = _stopLatitude;
+@synthesize stopLongitude = _stopLongitude;
+@synthesize  atStop = _atStop;
 
 
 
 
 // Get the xml data from UTA website and send it to an NSXMLParser instance
-- (NSArray *) executeUtaFetcher :(NSString *) forQuery
+- (NSArray *) executeUtaFetcher :(NSString *) forRouteQuery
 {
     BOOL success;
     NSXMLParser *xmlParser;
-    NSString *query = [forQuery stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSString *query = [forRouteQuery stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSData *xmlData = [NSData dataWithContentsOfURL:[NSURL URLWithString:query]];
     xmlParser = [[NSXMLParser alloc] initWithData:xmlData];
     [xmlParser setDelegate:self];
@@ -52,8 +71,40 @@
      success = [xmlParser parse];
     NSArray *vehicleInfoArray = [NSArray arrayWithArray:self.vehicleInfoArray];
     [self.vehicleInfoArray removeAllObjects];
-    return vehicleInfoArray;
+    if (success)return vehicleInfoArray;
+    else return nil;
     
+}
+- (NSArray *) executeFetcher:(NSString *)forStopQuery
+{
+    BOOL success;
+    NSXMLParser *xmlParser;
+    NSString *query = [forStopQuery stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSData *xmlData = [NSData dataWithContentsOfURL:[NSURL URLWithString:query]];
+    xmlParser = [[NSXMLParser alloc] initWithData:xmlData];
+    [xmlParser setDelegate:self];
+    [xmlParser setShouldResolveExternalEntities:YES];
+    success = [xmlParser parse];
+    NSArray *stopInfoArray = [NSArray arrayWithArray:self.stopInfoArray];
+    [self.stopInfoArray removeAllObjects];
+    if (success) return stopInfoArray;
+    else return nil;
+}
+
+- (NSArray *) executeStopFetcher : (NSString *) forStopId
+{
+    BOOL success;
+    NSXMLParser *xmlParser;
+    NSString *query = [forStopId stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSData *xmlData = [NSData dataWithContentsOfURL:[NSURL URLWithString:query]];
+    xmlParser = [[NSXMLParser alloc] initWithData:xmlData];
+    [xmlParser setDelegate:self];
+    [xmlParser setShouldResolveExternalEntities:YES];
+    success = [xmlParser parse];
+    NSArray *vehicleInfoArray = [NSArray arrayWithArray:self.vehicleInfoArray];
+    [self.vehicleInfoArray removeAllObjects];
+    if (success) return vehicleInfoArray;
+    else return nil;
 }
 
 //Lazily instantiate the vehicle info dictionary and other mutable arrays used for holding the parsed data
@@ -124,7 +175,47 @@
     }
     return _currentNode;
 }
-
+- (NSString *) stopDirection {
+    if (!_stopDirection)_stopDirection = [[NSString alloc]init];
+    return _stopDirection;
+}
+- (NSString *) stopID {
+    if (!_stopID)_stopID = [[NSString alloc]init];
+    return  _stopID;
+}
+- (NSString *)stopName {
+    if (!_stopName)_stopName = [[NSString alloc]init];
+    return _stopName;
+}
+- (NSMutableArray *)routesStopServices {
+    if (!_routesStopServices)_routesStopServices = [[NSMutableArray alloc]init];
+    return _routesStopServices;
+}
+- (NSString *)distanceToStop {
+    if (!_distanceToStop)_distanceToStop = [[NSString alloc]init];
+    return  _distanceToStop;
+    
+}
+- (NSMutableArray *) stopInfoArray {
+    if (!_stopInfoArray)_stopInfoArray = [[NSMutableArray alloc]init];
+    return _stopInfoArray;
+}
+- (NSDictionary *) stopInfo {
+    if (!_stopInfo)_stopInfo = [[NSDictionary alloc]init];
+    return _stopInfo;
+}
+- (NSString *)stopLatitude {
+    if (!_stopLatitude)_stopLatitude = [[NSString alloc]init];
+    return _stopLatitude;
+}
+- (NSString *)stopLongitude {
+    if (!_stopLongitude) _stopLongitude = [[NSString alloc]init];
+    return _stopLongitude;
+}
+- (NSString *)atStop {
+    if (!_atStop)_atStop = [[NSString alloc]init];
+    return _atStop;
+}
 - (void) parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict
 {
     
@@ -139,14 +230,16 @@
 // NSXMLParser delegate method, that assigns the currentNode string to different strings depending on element name, when an element ends 
 - (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName
 {
-    if ([elementName isEqualToString:PUBLISHED_LINE_NAME]) {
+    if ([elementName isEqualToString:PUBLISHED_LINE_NAME]&&![self.currentNode isEqualToString:@"Unknown"]) {
         self.publishedLineName = self.currentNode;
     }
-    if ([elementName isEqualToString:LATITUDE]) {
+    if ([elementName isEqualToString:LATITUDE]&&![self.currentNode isEqualToString:@"0"]) {
         self.vehicleLatitude = self.currentNode;
+        self.stopLatitude = self.currentNode;
     }
-    if ([elementName isEqualToString:LONGITUDE]) {
+    if ([elementName isEqualToString:LONGITUDE]&&![self.currentNode isEqualToString:@"0"]) {
         self.vehicleLongitude =self.currentNode;
+        self.stopLongitude = self.currentNode;
     }
     if ([elementName isEqualToString:PROGRESS_RATE]) {
         self.progressRate=self.currentNode;
@@ -157,15 +250,38 @@
     if ([elementName isEqualToString:DIRECTION_OF_VEHICLE]){
         self.directionOfVehicle=self.currentNode;
     }
-    if ([elementName isEqualToString:LINE_NAME]){
+    if ([elementName isEqualToString:LINE_NAME]&&![self.currentNode isEqualToString:@"000"]){
         self.lineref = self.currentNode;
     }
     if ([elementName isEqualToString:STOP_NAME]){
+        self.stopName = self.currentNode;
+    }
+    if ([elementName isEqualToString:STOP_POINT_REF]){
         [self.stopIdsAlongTheWay addObject:self.currentNode];
     }
+    if ([elementName isEqualToString:ROUTES_STOP_SERVICES]){
+        [self.routesStopServices addObject:self.currentNode];
+    }
+    if ([elementName isEqualToString:STOP_DIRECTION]){
+        self.stopDirection = self.currentNode;
+    }
+    if ([elementName isEqualToString:STOP_ID]){
+        self.stopID = self.currentNode;
+    }
+    if ([elementName isEqualToString:DISTANCE_TO_STOP]){
+        self.distanceToStop = self.currentNode;
+    }
+    if ([elementName isEqualToString:VEHICLE_AT_STOP]){
+        self.atStop = self.currentNode;
+    }
     if ([elementName isEqualToString:@"MonitoredVehicleJourney"]) {
-        self.vehicleInfo = [NSDictionary dictionaryWithObjectsAndKeys:self.publishedLineName,PUBLISHED_LINE_NAME,self.vehicleLatitude,LATITUDE,self.vehicleLongitude,LONGITUDE,self.progressRate,PROGRESS_RATE,self.departureTime,DEPARTURE_TIME,self.directionOfVehicle,DIRECTION_OF_VEHICLE,self.lineref,LINE_NAME, self.stopIdsAlongTheWay,STOP_NAME, nil];
-    [self.vehicleInfoArray addObject:self.vehicleInfo];
+        self.vehicleInfo = [NSDictionary dictionaryWithObjectsAndKeys:self.publishedLineName,PUBLISHED_LINE_NAME,self.vehicleLatitude,LATITUDE,self.vehicleLongitude,LONGITUDE,self.progressRate,PROGRESS_RATE,self.departureTime,DEPARTURE_TIME,self.atStop,VEHICLE_AT_STOP, self.directionOfVehicle,DIRECTION_OF_VEHICLE,self.lineref,LINE_NAME, self.stopIdsAlongTheWay,STOP_POINT_REF,nil];
+        [self.vehicleInfoArray addObject:self.vehicleInfo];
+    }
+    
+    if ([elementName isEqualToString:@"MonitoredCloseStop"]){
+            self.stopInfo = [NSDictionary dictionaryWithObjectsAndKeys:self.stopName,STOP_NAME,self.stopID,STOP_ID,self.stopDirection,STOP_DIRECTION,self.stopLatitude,LATITUDE,self.stopLongitude,LONGITUDE, self.routesStopServices,ROUTES_STOP_SERVICES,self.distanceToStop,DISTANCE_TO_STOP, nil];
+        [self.stopInfoArray addObject:self.stopInfo];
     }
     self.currentNode = nil;
 }
@@ -173,7 +289,8 @@
 // NSXMLParser delegate method, that sets the contents of the mutable arrays to nil;
 - (void) parserDidEndDocument:(NSXMLParser *)parser
 {
-    //NSLog(@"vehicles %@",self.vehicleInfoArray);
+    NSLog(@"vehicles %@",self.vehicleInfoArray);
+    //NSLog(@"stops %@",self.stopInfoArray);
     self.publishedLineName = nil;
     self.vehicleLatitude = nil;
     self.vehicleLongitude = nil;
@@ -182,6 +299,13 @@
     self.directionOfVehicle = nil;
     self.lineref = nil;
     self.stopIdsAlongTheWay =nil;
+    self.stopID = nil;
+    self.stopDirection = nil;
+    self.stopName = nil;
+    self.stopLatitude = nil;
+    self.stopLongitude = nil;
+    self.routesStopServices = nil;
+    self.distanceToStop = nil;
 }
 
 @end

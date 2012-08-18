@@ -11,6 +11,7 @@
 #import "MapViewController.h"
 #import "LocationAnnotation.h"
 #import "FavoritesTableViewController.h"
+#import "StopInfoTableViewController.h"
 
 @interface UTAViewController ()<FavoritesTableViewControllerDelegate>
 
@@ -21,7 +22,6 @@
 @property (nonatomic, strong) NSMutableArray *shape_lt; //holds the shape_pt_lat for passing to mapview overlays
 @property (nonatomic, strong) NSMutableArray *shape_lon; //holds the shape_pt_lon for passing to mapview overlays
 @property (nonatomic, strong) UITableView *autocompleteTableView;
-@property (nonatomic, strong) MapViewController *mapvc;
 @property (nonatomic, strong) NSMutableArray *routeNames;
 @property (nonatomic, strong) NSMutableArray *autoCompleteRouteNames;
 @property (strong, nonatomic) IBOutlet UIView *infoView;
@@ -38,17 +38,10 @@
 @synthesize shape_lt = _shape_lt;
 @synthesize routeNames = _routeNames;
 @synthesize autoCompleteRouteNames = _autoCompleteRouteNames;
-@synthesize mapvc = _mapvc;
 @synthesize infoView = _infoView;
 
 
 // getting the managedobjectcontext and lazily instantiating
-- (MapViewController *)mapvc
-{
-    if (!_mapvc)_mapvc = [[MapViewController alloc]init];
-    return _mapvc;
-}
-
 - (NSManagedObjectContext *)managedObjectContext
 {
     if (!_managedObjectContext)_managedObjectContext = [[NSManagedObjectContext alloc]init];
@@ -114,21 +107,19 @@
     [self.view addSubview:self.autocompleteTableView];
     self.routeName.delegate = self;
     self.infoView.hidden = YES;
-    UINavigationController *nvc = [self.tabBarController.viewControllers lastObject];
-    FavoritesTableViewController *fvc = (FavoritesTableViewController *)[nvc topViewController];
+    UINavigationController *fnvc = [self.tabBarController.viewControllers lastObject];
+    FavoritesTableViewController *fvc = (FavoritesTableViewController *)[fnvc topViewController];
     [fvc setDelegate:self];
-
 }
 
 - (IBAction)done {
     self.infoView.hidden = YES;
-    self.autocompleteTableView.hidden = NO;
 }
 
 //shows info, trax numbers that can be used to query, and legend for progress rate
 - (IBAction)showInfo:(id)sender {
     self.infoView.hidden = NO;
-    self.autocompleteTableView.hidden = YES;
+   self.autocompleteTableView.hidden = YES;
 }
 
 // shows an autofil by substringing the typed characters
@@ -253,7 +244,7 @@
         [spinner stopAnimating];
         dispatch_async(dispatch_get_main_queue(), ^{
             NSInteger numberofcontrollers = [self.navigationController.viewControllers count];
-            if (numberofcontrollers <2)[self performSegueWithIdentifier:@"show on map" sender:self];
+            if (numberofcontrollers <2&&self.vehicleInfoArray)[self performSegueWithIdentifier:@"show on map" sender:self];
         });
     });
     dispatch_release(xmlGetter);
@@ -269,6 +260,7 @@
         [self showVehicles:sender];
 
 }
+
 
 // helper method to return an array of annotations to pass to mapview during segue
 - (NSArray *) mapAnnotations

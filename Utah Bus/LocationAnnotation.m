@@ -22,6 +22,9 @@
     if ([self.vehicleInfo objectForKey:PUBLISHED_LINE_NAME]){
         return [self.vehicleInfo objectForKey:PUBLISHED_LINE_NAME];
     }
+    else if ([self.vehicleInfo objectForKey:STOP_NAME]){
+        return [self.vehicleInfo objectForKey:STOP_NAME];
+    }
     else return nil;
 }
 
@@ -29,6 +32,9 @@
 {
     if ([self.vehicleInfo objectForKey:DIRECTION_OF_VEHICLE]){
         return [self.vehicleInfo objectForKey:DIRECTION_OF_VEHICLE];
+    }
+    else if ([self.vehicleInfo objectForKey:STOP_DIRECTION]){
+        return [self.vehicleInfo objectForKey:STOP_DIRECTION];
     }
     else return nil;
 }
