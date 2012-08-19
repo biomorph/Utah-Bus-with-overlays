@@ -9,6 +9,6 @@
 #import <UIKit/UIKit.h>
 
 @interface StopViewController : UITableViewController
-@property (nonatomic, strong) NSArray * stops;
+@property (nonatomic, strong) NSDictionary * selectedVehicle;
 
 @end

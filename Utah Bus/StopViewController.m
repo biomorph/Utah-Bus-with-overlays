@@ -7,25 +7,34 @@
 //
 
 #import "StopViewController.h"
+#import "UtaFetcher.h"
 
 @interface StopViewController ()
 @property (nonatomic, strong) NSMutableArray *uniqueStops;
+@property (nonatomic, strong) NSArray *stopInfoArray;
+@property (nonatomic, strong) UtaFetcher *utaFetcher;
 @end
 
 
 @implementation StopViewController
 
-@synthesize stops = _stops;
+@synthesize selectedVehicle = _selectedVehicle;
 @synthesize uniqueStops = _uniqueStops;
+@synthesize stopInfoArray = _stopInfoArray;
 
+- (UtaFetcher *) utaFetcher
+{
+    if (!_utaFetcher)_utaFetcher = [[UtaFetcher alloc]init];
+    return _utaFetcher;
+}
 - (NSMutableArray *)uniqueStops
 {
     if (!_uniqueStops) _uniqueStops = [[NSMutableArray alloc]init];
     return _uniqueStops;
 }
-- (void) setStops:(NSArray *)stops
+- (void) setSelectedVehicle:(NSDictionary *)selectedVehicle
 {
-    _stops = stops;
+    _selectedVehicle = selectedVehicle;
     [self.tableView reloadData];
 }
 
@@ -41,13 +50,24 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    for (NSString *stop in self.stops){
-        if (![self.uniqueStops containsObject:stop]) {
-            [self.uniqueStops addObject:stop];
-        }
-    }
+    UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    [spinner startAnimating];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:spinner];
+   double latitude = [[self.selectedVehicle objectForKey:LATITUDE]doubleValue];
+    double longitude = [[self.selectedVehicle objectForKey:LONGITUDE]doubleValue];
+    NSString *closestStopUrl = [NSString stringWithFormat:@"http://api.rideuta.com/SIRI/SIRI.svc/CloseStopmonitor?latitude=%f&longitude=%f&route=%@&numberToReturn=5&usertoken=%@",latitude,longitude, [self.selectedVehicle objectForKey:LINE_NAME],UtaAPIKey];
+    dispatch_queue_t xmlGetter = dispatch_queue_create("UTA xml getter", NULL);
+    dispatch_async(xmlGetter, ^{
+        self.stopInfoArray = [self.utaFetcher executeFetcher:closestStopUrl];
+        NSString *stopUrl = [NSString stringWithFormat:@"http://api.rideuta.com/SIRI/SIRI.svc/StopMonitor?stopid=%@&minutesout=30&onwardcalls=false&filterroute=%@&usertoken=%@",[self.stopInfoArray objectAtIndex:<#(NSUInteger)#>],[self.selectedVehicle objectForKey:LINE_NAME],UtaAPIKey];
+        [spinner stopAnimating];
+        dispatch_async(dispatch_get_main_queue(), ^{
+        });
+    });
+    dispatch_release(xmlGetter);
     
 
+    
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
  

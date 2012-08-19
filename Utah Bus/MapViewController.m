@@ -178,8 +178,8 @@
 // seguing to a tableviewcontroller to show the stops that the selected bus makes
 - (void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    if ([segue.identifier isEqualToString:@"show stops"]){
-        [segue.destinationViewController setStops:self.stops];
+    if ([segue.identifier isEqualToString:@"show closest stops"]){
+        [segue.destinationViewController setSelectedVehicle:self.vehicleInfo];
     }
 }
 - (void) setMapView:(MKMapView *)mapView
