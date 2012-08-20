@@ -148,7 +148,7 @@
     self.vehicleInfo = [(LocationAnnotation *)view.annotation vehicleInfo];
     if (self.vehicleInfo){
         self.stops = [self.vehicleInfo objectForKey:STOP_POINT_REF];
-        [self performSegueWithIdentifier:@"show closest stops" sender:view.rightCalloutAccessoryView];
+        [self performSegueWithIdentifier:@"show stops" sender:view.rightCalloutAccessoryView];
     }
 }
 
