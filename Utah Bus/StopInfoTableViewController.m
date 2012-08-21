@@ -98,9 +98,6 @@
             NSArray *keyValuePairs = [NSArray arrayWithObjects:@"Arrival Time",[NSString stringWithFormat:@"%d minutes",[[dictionary valueForKey:key]intValue]/60], nil];
             [dictValues addObject:keyValuePairs];
         }
-        else if ([key isEqualToString:PROGRESS_RATE]){
-            
-        }
         else if ([key isEqualToString:STOP_POINT_REF]){
             NSArray *keyValuePairs = [NSArray arrayWithObjects:@"Stops This Vehicle Makes",[dictionary valueForKey:key], nil];
             [dictValues addObject:keyValuePairs];

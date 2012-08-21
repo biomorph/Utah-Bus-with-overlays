@@ -17,6 +17,7 @@
 @property (nonatomic, strong) NSArray *vehicleInfoArray;
 @property (strong, nonatomic) IBOutlet MKMapView *mapView;
 @property (nonatomic, strong) UtaFetcher *utaFetcher;
+@property BOOL internetActive;
 
 
 @end
@@ -105,6 +106,10 @@
 {
     [super viewDidLoad];
     self.navigationItem.title = @"Stops Close By";
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(checkNetworkStatus:) name:kReachabilityChangedNotification object:nil];
+    
+    self.internetReachable = [Reachability reachabilityForInternetConnection];
+    [self.internetReachable startNotifier];
 	// Do any additional setup after loading the view.
 }
 
@@ -129,7 +134,15 @@
     return aView;
 }
 else return  nil;
-
+}
+-(void) checkNetworkStatus:(NSNotification *)notice
+{
+    self.internetActive = YES;
+    NetworkStatus internetStatus = [self.internetReachable currentReachabilityStatus];
+    if (internetStatus == NotReachable){
+        //NSLog(@"The internet is down.");
+        self.internetActive = NO;
+    }
     
 }
 - (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view
@@ -149,9 +162,19 @@ else return  nil;
         NSString *url = [NSString stringWithFormat:@"http://api.rideuta.com/SIRI/SIRI.svc/StopMonitor?stopid=%@&minutesout=30&onwardcalls=true&filterroute=&usertoken=%@",stopID,UtaAPIKey];
         dispatch_queue_t xmlGetter = dispatch_queue_create("UTA xml getter", NULL);
         dispatch_async(xmlGetter, ^{
+            Reachability *reachability = [Reachability reachabilityForInternetConnection];
+            NetworkStatus internetStatus = [reachability currentReachabilityStatus];
+            if (internetStatus != NotReachable) {
             NSArray *vehicleInfoArray =  [NSArray arrayWithArray:[self.utaFetcher executeStopFetcher:url]];
             self.vehicleInfoArray = vehicleInfoArray;
             [spinner stopAnimating];
+            }
+            else {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Internet Connection" message:@"Please Check Your Internet Connection" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+                [alert show];
+                [spinner stopAnimating];
+                self.vehicleInfoArray = nil;
+            }
             dispatch_async(dispatch_get_main_queue(), ^{
                  [self performSegueWithIdentifier:@"show stop info" sender:view.rightCalloutAccessoryView];
             });

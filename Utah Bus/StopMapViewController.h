@@ -7,9 +7,11 @@
 //
 
 #import "MapViewController.h"
+#import "Reachability.h"
 
 
 @interface StopMapViewController : MapViewController
 @property (nonatomic, strong) NSDictionary *stopInfo;
-
+@property (strong, nonatomic) Reachability *internetReachable;
+-(void) checkNetworkStatus:(NSNotification *)notice;
 @end

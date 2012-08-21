@@ -12,7 +12,7 @@
 #import "LocationAnnotation.h"
 #import "FavoritesTableViewController.h"
 
-@interface UTAStopMonitoringViewController ()<CLLocationManagerDelegate,UITableViewDelegate,UITextFieldDelegate,NSFetchedResultsControllerDelegate,UITableViewDataSource>
+@interface UTAStopMonitoringViewController ()<CLLocationManagerDelegate,NSFetchedResultsControllerDelegate>//UITableViewDelegate,UITextFieldDelegate,UITableViewDataSource
 @property (strong, nonatomic) IBOutlet UITextField *routeFilter;
 @property (nonatomic, strong)  CLLocationManager *locationManager;
 @property (nonatomic, strong) NSArray *stopInfoArray;
@@ -22,6 +22,8 @@
 @property (nonatomic, strong) NSMutableArray *routeNames;
 @property (nonatomic, strong) NSMutableArray *shape_lt;
 @property (nonatomic, strong) NSMutableArray *shape_lon;
+@property BOOL internetActive;
+
 
 
 @end
@@ -73,6 +75,16 @@
     }
     return _locationManager;
 }
+-(void) checkNetworkStatus:(NSNotification *)notice
+{
+    self.internetActive = YES;
+    NetworkStatus internetStatus = [self.internetReachable currentReachabilityStatus];
+    if (internetStatus == NotReachable){
+        //NSLog(@"The internet is down.");
+        self.internetActive = NO;
+    }
+    
+}
 - (IBAction)findStops:(id)sender {
     
     UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
@@ -80,11 +92,35 @@
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:spinner];
     double latitude = self.locationManager.location.coordinate.latitude;
     double longitude = self.locationManager.location.coordinate.longitude;
-    NSString *urlString = [NSString stringWithFormat:@"http://api.rideuta.com/SIRI/SIRI.svc/CloseStopmonitor?latitude=%f&longitude=%f&route=%@&numberToReturn=10&usertoken=%@",latitude,longitude, self.routeFilter.text,UtaAPIKey];
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Routes"
+                                              inManagedObjectContext:self.managedObjectContext];
+    NSPredicate *routePredicate = [NSPredicate predicateWithFormat:@"route_short_name=%@",self.routeFilter.text];
+    [fetchRequest setEntity:entity];
+    [fetchRequest setPredicate:routePredicate];
+    NSArray *fetchedRoutes = [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL];
+    NSString *urlString = [NSString string];
+    if ([fetchedRoutes count] >0) {
+         urlString = [NSString stringWithFormat:@"http://api.rideuta.com/SIRI/SIRI.svc/CloseStopmonitor?latitude=%f&longitude=%f&route=%@&numberToReturn=10&usertoken=%@",latitude,longitude, self.routeFilter.text,UtaAPIKey];
+    }
+    else {
+        urlString = [NSString stringWithFormat:@"http://api.rideuta.com/SIRI/SIRI.svc/CloseStopmonitor?latitude=%f&longitude=%f&route=&numberToReturn=10&usertoken=%@",latitude,longitude,UtaAPIKey];
+    }
     dispatch_queue_t xmlGetter = dispatch_queue_create("UTA xml getter", NULL);
     dispatch_async(xmlGetter, ^{
+        Reachability *reachability = [Reachability reachabilityForInternetConnection];
+        NetworkStatus internetStatus = [reachability currentReachabilityStatus];
+        if (internetStatus != NotReachable) {
         self.stopInfoArray = [self.utaFetcher executeFetcher:urlString];
         [spinner stopAnimating];
+        }
+        else {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Internet Connection" message:@"Please Check Your Internet Connection" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+            [alert show];
+            [spinner stopAnimating];
+            self.stopInfoArray = nil;
+        }
+
         dispatch_async(dispatch_get_main_queue(), ^{
             if (self.stopInfoArray)[self performSegueWithIdentifier:@"show stops on map" sender:self];
         });
@@ -92,17 +128,17 @@
     dispatch_release(xmlGetter);
     
 }
-- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+/*- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
     self.autocompleteTableView.hidden = NO;
     NSString *substring = [NSString stringWithString:textField.text];
     substring = [substring stringByReplacingCharactersInRange:range withString:string];
     [self searchAutocompleteEntriesWithSubstring:substring];
     return YES;
-}
+}*/
 
 // presents autofil options in a tableview based on the typed string
-- (void)searchAutocompleteEntriesWithSubstring:(NSString *)substring {
+/*- (void)searchAutocompleteEntriesWithSubstring:(NSString *)substring {
     
     // Put anything that starts with this substring into the autocompleteUrls array
     // The items in this array is what will show up in the table view
@@ -147,7 +183,7 @@
     self.routeFilter.text = selectedCell.textLabel.text;
     self.autocompleteTableView.hidden = YES;
     
-}
+}*/
 
 
 
@@ -174,7 +210,7 @@
     self.locationManager.distanceFilter = kCLDistanceFilterNone; // whenever we move
     self.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters; // 10 m
     [self.locationManager startUpdatingLocation];
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    /*NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     if (![defaults objectForKey:@"utabus.availableroutes"]){
         NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
         NSEntityDescription *entity = [NSEntityDescription entityForName:@"Routes"
@@ -191,13 +227,13 @@
     else {
         self.routeNames = [defaults objectForKey:@"utabus.availableroutes"];
     }
-    self.autocompleteTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 180, 320, 105) style:UITableViewStylePlain];
+    self.autocompleteTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 180, 640, 105) style:UITableViewStylePlain];
     self.autocompleteTableView.delegate = self;
     self.autocompleteTableView.dataSource =self;
     self.autocompleteTableView.scrollEnabled = YES;
     self.autocompleteTableView.hidden = YES;
     [self.view addSubview:self.autocompleteTableView];
-    self.routeFilter.delegate = self;
+    self.routeFilter.delegate = self;*/
 	// Do any additional setup after loading the view.
 }
 - (NSArray *) mapAnnotations
@@ -230,6 +266,14 @@
     }
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(checkNetworkStatus:) name:kReachabilityChangedNotification object:nil];
+    
+    self.internetReachable = [Reachability reachabilityForInternetConnection];
+    [self.internetReachable startNotifier];
+    
+}
 - (void)viewDidUnload
 {
     [self setRouteFilter:nil];
