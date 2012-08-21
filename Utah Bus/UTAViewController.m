@@ -24,7 +24,7 @@
 @property (nonatomic, strong) UITableView *autocompleteTableView;
 @property (nonatomic, strong) NSMutableArray *routeNames;
 @property (nonatomic, strong) NSMutableArray *autoCompleteRouteNames;
-@property (strong, nonatomic) IBOutlet UIView *infoView;
+@property BOOL internetActive;
 @end
 
 @implementation UTAViewController
@@ -38,7 +38,6 @@
 @synthesize shape_lt = _shape_lt;
 @synthesize routeNames = _routeNames;
 @synthesize autoCompleteRouteNames = _autoCompleteRouteNames;
-@synthesize infoView = _infoView;
 
 
 // getting the managedobjectcontext and lazily instantiating
@@ -79,10 +78,22 @@
     return _utaFetcher;
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(checkNetworkStatus:) name:kReachabilityChangedNotification object:nil];
+    
+    self.internetReachable = [Reachability reachabilityForInternetConnection];
+    [self.internetReachable startNotifier];
+
+}
+
+
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    // check for internet connection
+    /*NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     if (![defaults objectForKey:@"utabus.availableroutes"]){
         NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
         NSEntityDescription *entity = [NSEntityDescription entityForName:@"Routes"
@@ -99,31 +110,33 @@
     else {
         self.routeNames = [defaults objectForKey:@"utabus.availableroutes"];
     }
-    self.autocompleteTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 180, 320, 105) style:UITableViewStylePlain];
+    self.autocompleteTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 160, 640, 105) style:UITableViewStylePlain];
     self.autocompleteTableView.delegate = self;
     self.autocompleteTableView.dataSource = self;
     self.autocompleteTableView.scrollEnabled = YES;
     self.autocompleteTableView.hidden = YES;
     [self.view addSubview:self.autocompleteTableView];
     self.routeName.delegate = self;
-    self.infoView.hidden = YES;
-    UINavigationController *fnvc = [self.tabBarController.viewControllers lastObject];
+    self.infoView.hidden = YES;*/
+    UINavigationController *fnvc = [self.tabBarController.viewControllers objectAtIndex:2];
     FavoritesTableViewController *fvc = (FavoritesTableViewController *)[fnvc topViewController];
     [fvc setDelegate:self];
 }
 
-- (IBAction)done {
-    self.infoView.hidden = YES;
+-(void) checkNetworkStatus:(NSNotification *)notice
+{
+    self.internetActive = YES;
+    NetworkStatus internetStatus = [self.internetReachable currentReachabilityStatus];
+    if (internetStatus == NotReachable){
+            //NSLog(@"The internet is down.");
+            self.internetActive = NO;
+    }
+            
 }
 
-//shows info, trax numbers that can be used to query, and legend for progress rate
-- (IBAction)showInfo:(id)sender {
-    self.infoView.hidden = NO;
-   self.autocompleteTableView.hidden = YES;
-}
 
 // shows an autofil by substringing the typed characters
-- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+/*- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
     self.autocompleteTableView.hidden = NO;
     NSString *substring = [NSString stringWithString:textField.text];
@@ -178,7 +191,7 @@
     self.routeName.text = selectedCell.textLabel.text;
     self.autocompleteTableView.hidden = YES;
     
-}
+}*/
 
 //This method dismisses the onscreen keyboard when touched away from text field
 - (void)touchesEnded: (NSSet *)touches withEvent: (UIEvent *)event {
@@ -240,8 +253,20 @@
 
     dispatch_queue_t xmlGetter = dispatch_queue_create("UTA xml getter", NULL);
     dispatch_async(xmlGetter, ^{
+        Reachability *reachability = [Reachability reachabilityForInternetConnection];
+        NetworkStatus internetStatus = [reachability currentReachabilityStatus];
+        if (internetStatus != NotReachable) {
         self.vehicleInfoArray = [self.utaFetcher executeUtaFetcher:urlString];
         [spinner stopAnimating];
+        }
+        else {
+           UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Internet Connection" message:@"Please Check Your Internet Connection" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+            [alert show];
+            [spinner stopAnimating];
+            self.shape_lon = nil;
+            self.shape_lt = nil;
+            self.vehicleInfoArray = nil;
+        }
         dispatch_async(dispatch_get_main_queue(), ^{
             NSInteger numberofcontrollers = [self.navigationController.viewControllers count];
             if (numberofcontrollers <2&&self.vehicleInfoArray)[self performSegueWithIdentifier:@"show on map" sender:self];
@@ -270,6 +295,7 @@
         [annotations addObject:[LocationAnnotation annotationForVehicleOrStop:vehicle]];
         
     }
+    
     return annotations;
 }
 
@@ -285,17 +311,23 @@
     }
 }
 
+- (void) viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:YES];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
 - (void)viewDidUnload
 {
     [self setRouteName:nil];
-    [self setInfoView:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
+    [self.autocompleteTableView reloadInputViews];
     return YES;
 }
+
 
 @end

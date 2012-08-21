@@ -12,14 +12,17 @@
 #import "UtaFetcher.h"
 #import "UtaAPIKey.h"
 #import <CoreData/CoreData.h>
+#import "Reachability.h"
 
 
 
-@interface UTAViewController : UIViewController <NSFetchedResultsControllerDelegate, UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate>
+@interface UTAViewController : UIViewController <NSFetchedResultsControllerDelegate>//UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate
 
 @property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController; //for fetching results from coredata
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;//managed object context to access coredata
+@property (strong, nonatomic) Reachability *internetReachable;
 
 @property (strong, nonatomic) IBOutlet UITextField *routeName;
+-(void) checkNetworkStatus:(NSNotification *)notice;
 
 @end

@@ -7,22 +7,28 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		071365D115DEF87D005A8218 /* favorites@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 071365D015DEF87D005A8218 /* favorites@2x.png */; };
-		071365D315DEFA2F005A8218 /* favorites.png in Resources */ = {isa = PBXBuildFile; fileRef = 071365D215DEFA2F005A8218 /* favorites.png */; };
-		071365D515DEFA90005A8218 /* closest.png in Resources */ = {isa = PBXBuildFile; fileRef = 071365D415DEFA90005A8218 /* closest.png */; };
-		071365D715DEFAD5005A8218 /* closest@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 071365D615DEFAD5005A8218 /* closest@2x.png */; };
-		071365D915DEFB35005A8218 /* route.png in Resources */ = {isa = PBXBuildFile; fileRef = 071365D815DEFB35005A8218 /* route.png */; };
-		071365DB15DEFB4C005A8218 /* route@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 071365DA15DEFB4C005A8218 /* route@2x.png */; };
 		0735E3D015D9CB6400BBEE9E /* UTAStopMonitoringViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0735E3CF15D9CB6400BBEE9E /* UTAStopMonitoringViewController.m */; };
 		0735E3D315D9D1A100BBEE9E /* Salt Lake City.gpx in Resources */ = {isa = PBXBuildFile; fileRef = 0735E3D215D9D1A100BBEE9E /* Salt Lake City.gpx */; };
 		0735E3D615DA147200BBEE9E /* StopMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0735E3D515DA147200BBEE9E /* StopMapViewController.m */; };
 		0735E3D915DB09FE00BBEE9E /* StopInfoTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0735E3D815DB09FE00BBEE9E /* StopInfoTableViewController.m */; };
 		0740D84515D027C90075A32C /* MapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0740D84415D027C90075A32C /* MapViewController.m */; };
 		0740D84915D053B30075A32C /* LocationAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 0740D84815D053B30075A32C /* LocationAnnotation.m */; };
-		0748137C15E2AE9F00B21829 /* icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0748137A15E2AE9F00B21829 /* icon@2x.png */; };
-		0748137D15E2AE9F00B21829 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0748137B15E2AE9F00B21829 /* icon.png */; };
-		0748137F15E2AEAA00B21829 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 0748137E15E2AEAA00B21829 /* Default.png */; };
-		0748138115E2AEAF00B21829 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0748138015E2AEAF00B21829 /* Default@2x.png */; };
+		0748138315E2C92B00B21829 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0748138215E2C92B00B21829 /* SystemConfiguration.framework */; };
+		0748138915E2C9F600B21829 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 0748138815E2C9F600B21829 /* Reachability.m */; };
+		0748139315E308D700B21829 /* default.png in Resources */ = {isa = PBXBuildFile; fileRef = 0748138F15E308D700B21829 /* default.png */; };
+		0748139415E308D700B21829 /* default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0748139015E308D700B21829 /* default@2x.png */; };
+		0748139515E308D700B21829 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0748139115E308D700B21829 /* icon.png */; };
+		0748139615E308D700B21829 /* icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0748139215E308D700B21829 /* icon@2x.png */; };
+		0748139915E4072300B21829 /* HelpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0748139815E4072300B21829 /* HelpViewController.m */; };
+		0748139B15E415CD00B21829 /* help.html in Resources */ = {isa = PBXBuildFile; fileRef = 0748139A15E415CD00B21829 /* help.html */; };
+		074813B715E41E6600B21829 /* closest@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 074813AF15E41E6600B21829 /* closest@2x.png */; };
+		074813B815E41E6600B21829 /* help.png in Resources */ = {isa = PBXBuildFile; fileRef = 074813B015E41E6600B21829 /* help.png */; };
+		074813B915E41E6600B21829 /* route@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 074813B115E41E6600B21829 /* route@2x.png */; };
+		074813BA15E41E6600B21829 /* favorites@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 074813B215E41E6600B21829 /* favorites@2x.png */; };
+		074813BB15E41E6600B21829 /* favorites.png in Resources */ = {isa = PBXBuildFile; fileRef = 074813B315E41E6600B21829 /* favorites.png */; };
+		074813BC15E41E6600B21829 /* closest.png in Resources */ = {isa = PBXBuildFile; fileRef = 074813B415E41E6600B21829 /* closest.png */; };
+		074813BD15E41E6600B21829 /* route.png in Resources */ = {isa = PBXBuildFile; fileRef = 074813B515E41E6600B21829 /* route.png */; };
+		074813BE15E41E6600B21829 /* help@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 074813B615E41E6600B21829 /* help@2x.png */; };
 		07512F5715D1BF2D00FC9D84 /* StopViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 07512F5615D1BF2D00FC9D84 /* StopViewController.m */; };
 		07615BDF15D95328003C691C /* FavoritesTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 07615BDE15D95328003C691C /* FavoritesTableViewController.m */; };
 		078EBDD115D380D800FCA1D9 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 078EBDD015D380D700FCA1D9 /* CoreData.framework */; };
@@ -42,12 +48,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		071365D015DEF87D005A8218 /* favorites@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "favorites@2x.png"; sourceTree = "<group>"; };
-		071365D215DEFA2F005A8218 /* favorites.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = favorites.png; sourceTree = "<group>"; };
-		071365D415DEFA90005A8218 /* closest.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = closest.png; sourceTree = "<group>"; };
-		071365D615DEFAD5005A8218 /* closest@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "closest@2x.png"; sourceTree = "<group>"; };
-		071365D815DEFB35005A8218 /* route.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = route.png; sourceTree = "<group>"; };
-		071365DA15DEFB4C005A8218 /* route@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "route@2x.png"; sourceTree = "<group>"; };
 		0735E3CE15D9CB6400BBEE9E /* UTAStopMonitoringViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UTAStopMonitoringViewController.h; sourceTree = "<group>"; };
 		0735E3CF15D9CB6400BBEE9E /* UTAStopMonitoringViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UTAStopMonitoringViewController.m; sourceTree = "<group>"; };
 		0735E3D215D9D1A100BBEE9E /* Salt Lake City.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "Salt Lake City.gpx"; sourceTree = "<group>"; };
@@ -59,10 +59,24 @@
 		0740D84415D027C90075A32C /* MapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapViewController.m; sourceTree = "<group>"; };
 		0740D84715D053B30075A32C /* LocationAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocationAnnotation.h; sourceTree = "<group>"; };
 		0740D84815D053B30075A32C /* LocationAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocationAnnotation.m; sourceTree = "<group>"; };
-		0748137A15E2AE9F00B21829 /* icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon@2x.png"; sourceTree = "<group>"; };
-		0748137B15E2AE9F00B21829 /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
-		0748137E15E2AEAA00B21829 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
-		0748138015E2AEAF00B21829 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
+		0748138215E2C92B00B21829 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		0748138715E2C9F600B21829 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
+		0748138815E2C9F600B21829 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
+		0748138F15E308D700B21829 /* default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = default.png; sourceTree = "<group>"; };
+		0748139015E308D700B21829 /* default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "default@2x.png"; sourceTree = "<group>"; };
+		0748139115E308D700B21829 /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
+		0748139215E308D700B21829 /* icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon@2x.png"; sourceTree = "<group>"; };
+		0748139715E4072300B21829 /* HelpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelpViewController.h; sourceTree = "<group>"; };
+		0748139815E4072300B21829 /* HelpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HelpViewController.m; sourceTree = "<group>"; };
+		0748139A15E415CD00B21829 /* help.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = help.html; sourceTree = "<group>"; };
+		074813AF15E41E6600B21829 /* closest@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "closest@2x.png"; sourceTree = "<group>"; };
+		074813B015E41E6600B21829 /* help.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = help.png; sourceTree = "<group>"; };
+		074813B115E41E6600B21829 /* route@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "route@2x.png"; sourceTree = "<group>"; };
+		074813B215E41E6600B21829 /* favorites@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "favorites@2x.png"; sourceTree = "<group>"; };
+		074813B315E41E6600B21829 /* favorites.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = favorites.png; sourceTree = "<group>"; };
+		074813B415E41E6600B21829 /* closest.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = closest.png; sourceTree = "<group>"; };
+		074813B515E41E6600B21829 /* route.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = route.png; sourceTree = "<group>"; };
+		074813B615E41E6600B21829 /* help@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "help@2x.png"; sourceTree = "<group>"; };
 		07512F5515D1BF2D00FC9D84 /* StopViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StopViewController.h; sourceTree = "<group>"; };
 		07512F5615D1BF2D00FC9D84 /* StopViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StopViewController.m; sourceTree = "<group>"; };
 		07615BDD15D95328003C691C /* FavoritesTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FavoritesTableViewController.h; sourceTree = "<group>"; };
@@ -95,6 +109,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0748138315E2C92B00B21829 /* SystemConfiguration.framework in Frameworks */,
 				078EBDD115D380D800FCA1D9 /* CoreData.framework in Frameworks */,
 				07BB7BB115CC740A007A0531 /* MapKit.framework in Frameworks */,
 				07BB7BAF15CC7402007A0531 /* CoreLocation.framework in Frameworks */,
@@ -110,10 +125,11 @@
 		07BB7B8215CC73DA007A0531 = {
 			isa = PBXGroup;
 			children = (
-				0748138015E2AEAF00B21829 /* Default@2x.png */,
-				0748137E15E2AEAA00B21829 /* Default.png */,
-				0748137A15E2AE9F00B21829 /* icon@2x.png */,
-				0748137B15E2AE9F00B21829 /* icon.png */,
+				0748138F15E308D700B21829 /* default.png */,
+				0748139015E308D700B21829 /* default@2x.png */,
+				0748139115E308D700B21829 /* icon.png */,
+				0748139215E308D700B21829 /* icon@2x.png */,
+				0748138215E2C92B00B21829 /* SystemConfiguration.framework */,
 				078EBDD015D380D700FCA1D9 /* CoreData.framework */,
 				07BB7BB015CC740A007A0531 /* MapKit.framework */,
 				07BB7BAE15CC7402007A0531 /* CoreLocation.framework */,
@@ -144,12 +160,17 @@
 		07BB7B9715CC73DA007A0531 /* Utah Bus */ = {
 			isa = PBXGroup;
 			children = (
-				071365DA15DEFB4C005A8218 /* route@2x.png */,
-				071365D815DEFB35005A8218 /* route.png */,
-				071365D615DEFAD5005A8218 /* closest@2x.png */,
-				071365D215DEFA2F005A8218 /* favorites.png */,
-				071365D415DEFA90005A8218 /* closest.png */,
-				071365D015DEF87D005A8218 /* favorites@2x.png */,
+				074813AF15E41E6600B21829 /* closest@2x.png */,
+				074813B015E41E6600B21829 /* help.png */,
+				074813B115E41E6600B21829 /* route@2x.png */,
+				074813B215E41E6600B21829 /* favorites@2x.png */,
+				074813B315E41E6600B21829 /* favorites.png */,
+				074813B415E41E6600B21829 /* closest.png */,
+				074813B515E41E6600B21829 /* route.png */,
+				074813B615E41E6600B21829 /* help@2x.png */,
+				0748139A15E415CD00B21829 /* help.html */,
+				0748138715E2C9F600B21829 /* Reachability.h */,
+				0748138815E2C9F600B21829 /* Reachability.m */,
 				0735E3D415DA147200BBEE9E /* StopMapViewController.h */,
 				0735E3D515DA147200BBEE9E /* StopMapViewController.m */,
 				0735E3D215D9D1A100BBEE9E /* Salt Lake City.gpx */,
@@ -171,6 +192,8 @@
 				07BB7BA015CC73DA007A0531 /* AppDelegate.h */,
 				07BB7BA115CC73DA007A0531 /* AppDelegate.m */,
 				07BB7BA315CC73DA007A0531 /* MainStoryboard.storyboard */,
+				0748139715E4072300B21829 /* HelpViewController.h */,
+				0748139815E4072300B21829 /* HelpViewController.m */,
 				07BB7BA615CC73DA007A0531 /* UTAViewController.h */,
 				07BB7BA715CC73DA007A0531 /* UTAViewController.m */,
 				07615BDD15D95328003C691C /* FavoritesTableViewController.h */,
@@ -247,16 +270,19 @@
 				07BB7BA515CC73DA007A0531 /* MainStoryboard.storyboard in Resources */,
 				079E2B6815D4BFF000038EC2 /* UTAGTFS.sqlite in Resources */,
 				0735E3D315D9D1A100BBEE9E /* Salt Lake City.gpx in Resources */,
-				071365D115DEF87D005A8218 /* favorites@2x.png in Resources */,
-				071365D315DEFA2F005A8218 /* favorites.png in Resources */,
-				071365D515DEFA90005A8218 /* closest.png in Resources */,
-				071365D715DEFAD5005A8218 /* closest@2x.png in Resources */,
-				071365D915DEFB35005A8218 /* route.png in Resources */,
-				071365DB15DEFB4C005A8218 /* route@2x.png in Resources */,
-				0748137C15E2AE9F00B21829 /* icon@2x.png in Resources */,
-				0748137D15E2AE9F00B21829 /* icon.png in Resources */,
-				0748137F15E2AEAA00B21829 /* Default.png in Resources */,
-				0748138115E2AEAF00B21829 /* Default@2x.png in Resources */,
+				0748139315E308D700B21829 /* default.png in Resources */,
+				0748139415E308D700B21829 /* default@2x.png in Resources */,
+				0748139515E308D700B21829 /* icon.png in Resources */,
+				0748139615E308D700B21829 /* icon@2x.png in Resources */,
+				0748139B15E415CD00B21829 /* help.html in Resources */,
+				074813B715E41E6600B21829 /* closest@2x.png in Resources */,
+				074813B815E41E6600B21829 /* help.png in Resources */,
+				074813B915E41E6600B21829 /* route@2x.png in Resources */,
+				074813BA15E41E6600B21829 /* favorites@2x.png in Resources */,
+				074813BB15E41E6600B21829 /* favorites.png in Resources */,
+				074813BC15E41E6600B21829 /* closest.png in Resources */,
+				074813BD15E41E6600B21829 /* route.png in Resources */,
+				074813BE15E41E6600B21829 /* help@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -295,6 +321,8 @@
 				0735E3D015D9CB6400BBEE9E /* UTAStopMonitoringViewController.m in Sources */,
 				0735E3D615DA147200BBEE9E /* StopMapViewController.m in Sources */,
 				0735E3D915DB09FE00BBEE9E /* StopInfoTableViewController.m in Sources */,
+				0748138915E2C9F600B21829 /* Reachability.m in Sources */,
+				0748139915E4072300B21829 /* HelpViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

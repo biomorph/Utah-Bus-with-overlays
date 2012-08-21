@@ -289,7 +289,7 @@
 // NSXMLParser delegate method, that sets the contents of the mutable arrays to nil;
 - (void) parserDidEndDocument:(NSXMLParser *)parser
 {
-    NSLog(@"vehicles %@",self.vehicleInfoArray);
+    //NSLog(@"vehicles %@",self.vehicleInfoArray);
     //NSLog(@"stops %@",self.stopInfoArray);
     self.publishedLineName = nil;
     self.vehicleLatitude = nil;
