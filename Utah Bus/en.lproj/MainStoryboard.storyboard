@@ -86,7 +86,7 @@
                                 </connections>
                             </button>
                             <activityIndicatorView contentMode="scaleToFill" style="gray" id="CUE-fo-Pfp">
-                                <rect key="frame" x="270" y="15" width="20" height="20"/>
+                                <rect key="frame" x="236" y="15" width="20" height="20"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </activityIndicatorView>
                         </subviews>

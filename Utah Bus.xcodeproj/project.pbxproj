@@ -402,13 +402,14 @@
 		07BB7BAD15CC73DA007A0531 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Ravi Alla";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Utah Bus/Utah Bus-Prefix.pch";
 				INFOPLIST_FILE = "Utah Bus/Utah Bus-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "A26361B6-1E32-4039-BA11-1AC123E343B3";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

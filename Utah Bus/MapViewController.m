@@ -22,6 +22,8 @@
 @property (strong, nonatomic) IBOutlet UIButton *refreshButton;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *addToFaves;
 @property (strong, nonatomic) IBOutlet UIActivityIndicatorView *spinner;
+@property (nonatomic) MKCoordinateRegion defaultZoom;
+@property (nonatomic) MKCoordinateRegion currentZoom;
 
 @end
 
@@ -85,7 +87,8 @@
     zoomRegion.span.longitudeDelta = longitudeDelta;
     if (zoomRegion.span.latitudeDelta==0) zoomRegion.span.latitudeDelta = 0.2;
     if (zoomRegion.span.longitudeDelta == 0) zoomRegion.span.longitudeDelta = 0.2;
-    [self.mapView setRegion:zoomRegion animated:YES];
+    if (!self.currentZoom.span.latitudeDelta)self.currentZoom = zoomRegion;
+    [self.mapView setRegion:self.currentZoom animated:YES];
     }
 
 // protecting against a crash when utafetcher returns empty stuff for whatever reason
@@ -95,7 +98,8 @@
     zoomRegion.center.longitude = -111.891047;
     zoomRegion.span.latitudeDelta = 0.8;
     zoomRegion.span.longitudeDelta = 0.8;
-    [self.mapView setRegion:zoomRegion animated:YES];
+    self.defaultZoom = zoomRegion;
+    [self.mapView setRegion:self.defaultZoom animated:YES];
 }
    
 // This is where i am making an array of coordinates to make an MKPolyLine out of
@@ -142,16 +146,22 @@ self.refreshButton.enabled = YES;
 - (IBAction)refreshMap:(id)sender {
     [self.spinner startAnimating];
     self.spinner.hidden = NO;
-    self.refreshButton.enabled = NO;
     NSString *route = [self.vehicleInfo objectForKey:LINE_NAME];
-    [self updateMapView];
-    self.annotations = nil;
-    self.shape_lon = [[self.refreshDelegate refreshedAnnotations:route :self]objectAtIndex:0];
-    self.shape_lt = [[self.refreshDelegate refreshedAnnotations:route :self]objectAtIndex:1];
-    self.annotations = [[self.refreshDelegate refreshedAnnotations:route :self]objectAtIndex:2];
+    NSArray *refreshedShapeLon = [[self.refreshDelegate refreshedAnnotations:route :self]objectAtIndex:0];
+     NSArray *refreshedShapeLat = [[self.refreshDelegate refreshedAnnotations:route :self]objectAtIndex:1];
+   NSArray *refreshedAnnotations = [[self.refreshDelegate refreshedAnnotations:route :self]objectAtIndex:2];
+    if ([refreshedAnnotations count]&&[refreshedShapeLat count]&&[refreshedShapeLon count]){
+        self.shape_lon = [refreshedShapeLon mutableCopy];
+        self.shape_lt = [refreshedShapeLat mutableCopy];
+        self.annotations = refreshedAnnotations;
+    }
     
 }
 
+- (void) mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated
+{
+    self.currentZoom = mapView.region;
+}
 - (void) mapView:(MKMapView *)mapView didAddAnnotationViews:(NSArray *)views
 {
      [self.spinner stopAnimating];

@@ -29,7 +29,7 @@
 @property (nonatomic, strong) NSString *stopLongitude;
 @property (nonatomic, strong) NSString *atStop;
 @property (nonatomic, strong) NSString *uniqueId;
-@property (nonatomic ,strong)NSMutableArray *uniqueIdArray;
+@property (nonatomic ,strong) NSCountedSet *idArray;
 @end
 
 
@@ -57,7 +57,7 @@
 @synthesize stopLongitude = _stopLongitude;
 @synthesize  atStop = _atStop;
 @synthesize uniqueId = _uniqueId;
-@synthesize uniqueIdArray = _uniqueIdArray;
+@synthesize idArray = _idArray;
 
 
 
@@ -75,7 +75,7 @@
      success = [xmlParser parse];
     NSArray *vehicleInfoArray = [NSArray arrayWithArray:self.vehicleInfoArray];
     [self.vehicleInfoArray removeAllObjects];
-    [self.uniqueIdArray removeAllObjects];
+    [self.idArray removeAllObjects];
     if (success)return vehicleInfoArray;
     else return nil;
     
@@ -108,7 +108,7 @@
     success = [xmlParser parse];
     NSArray *vehicleInfoArray = [NSArray arrayWithArray:self.vehicleInfoArray];
     [self.vehicleInfoArray removeAllObjects];
-    [self.uniqueIdArray removeAllObjects];
+    [self.idArray removeAllObjects];
     if (success) return vehicleInfoArray;
     else return nil;
 }
@@ -226,9 +226,9 @@
     if (!_uniqueId)_uniqueId = [[NSString alloc]init];
     return _uniqueId;
 }
--(NSMutableArray*)uniqueIdArray {
-    if (!_uniqueIdArray)_uniqueIdArray = [[NSMutableArray alloc]init];
-    return _uniqueIdArray;
+-(NSCountedSet *)idArray {
+    if (!_idArray)_idArray = [[NSCountedSet alloc]init];
+    return _idArray;
 }
 - (void) parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict
 {
@@ -244,14 +244,14 @@
 // NSXMLParser delegate method, that assigns the currentNode string to different strings depending on element name, when an element ends 
 - (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName
 {
-    if ([elementName isEqualToString:PUBLISHED_LINE_NAME]&&![self.currentNode isEqualToString:@"Unknown"]&&self.currentNode) {
+    if ([elementName isEqualToString:PUBLISHED_LINE_NAME]) {
         self.publishedLineName = self.currentNode;
     }
-    if ([elementName isEqualToString:LATITUDE]&&![self.currentNode isEqualToString:@"0"]) {
+    if ([elementName isEqualToString:LATITUDE]) {
         self.vehicleLatitude = self.currentNode;
         self.stopLatitude = self.currentNode;
     }
-    if ([elementName isEqualToString:LONGITUDE]&&![self.currentNode isEqualToString:@"0"]) {
+    if ([elementName isEqualToString:LONGITUDE]) {
         self.vehicleLongitude =self.currentNode;
         self.stopLongitude = self.currentNode;
     }
@@ -264,7 +264,7 @@
     if ([elementName isEqualToString:DIRECTION_OF_VEHICLE]){
         self.directionOfVehicle=self.currentNode;
     }
-    if ([elementName isEqualToString:LINE_NAME]&&![self.currentNode isEqualToString:@"000"]&&self.currentNode){
+    if ([elementName isEqualToString:LINE_NAME]){
         self.lineref = self.currentNode;
     }
     if ([elementName isEqualToString:STOP_NAME]){
@@ -290,13 +290,13 @@
     }
     if ([elementName isEqualToString:UNIQUE_ID]&&![self.currentNode isEqualToString:@"UTA_Unknown"]){
         self.uniqueId = self.currentNode;
-        [self.uniqueIdArray addObject:self.currentNode];
+        [self.idArray addObject:self.currentNode];
     }
     if ([elementName isEqualToString:@"MonitoredVehicleJourney"]) {
-        if (self.publishedLineName && self.vehicleLatitude && self.vehicleLongitude &&self.lineref&&self.uniqueId&&![self.uniqueIdArray containsObject:self.uniqueIdArray]){
+        
             self.vehicleInfo = [NSDictionary dictionaryWithObjectsAndKeys:self.publishedLineName,PUBLISHED_LINE_NAME,self.vehicleLatitude,LATITUDE,self.vehicleLongitude,LONGITUDE,self.progressRate,PROGRESS_RATE,self.departureTime,DEPARTURE_TIME,self.atStop,VEHICLE_AT_STOP, self.directionOfVehicle,DIRECTION_OF_VEHICLE,self.lineref,LINE_NAME, self.stopIdsAlongTheWay,STOP_POINT_REF,self.uniqueId,UNIQUE_ID, nil];
-        }
-        if (![self.uniqueIdArray containsObject:self.publishedLineName])[self.vehicleInfoArray addObject:self.vehicleInfo];
+        
+           if (![self.lineref isEqualToString:@"000"]) [self.vehicleInfoArray addObject:self.vehicleInfo];
     }
     
     if ([elementName isEqualToString:@"MonitoredCloseStop"]){
@@ -304,12 +304,14 @@
         [self.stopInfoArray addObject:self.stopInfo];
     }
     self.currentNode = nil;
+    
+    
 }
 
 // NSXMLParser delegate method, that sets the contents of the mutable arrays to nil;
 - (void) parserDidEndDocument:(NSXMLParser *)parser
 {
-    NSLog(@"vehicles %@",self.vehicleInfoArray);
+    //NSLog(@"vehicles %@",self.vehicleInfoArray);
     //NSLog(@"stops %@",self.stopInfoArray);
     self.publishedLineName = nil;
     self.vehicleLatitude = nil;
