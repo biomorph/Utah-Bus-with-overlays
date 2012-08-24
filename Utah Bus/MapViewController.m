@@ -10,6 +10,7 @@
 #import "LocationAnnotation.h"
 #import "UtaFetcher.h"
 #import "StopTableViewController.h"
+#import "UTAViewController.h"
 
 @interface MapViewController () <MKMapViewDelegate, CLLocationManagerDelegate>
 @property (strong, nonatomic) IBOutlet MKMapView *mapView;
@@ -17,10 +18,17 @@
 @property (strong, nonatomic) CLLocationManager *locationManager;
 @property (strong, nonatomic) NSArray *stops;
 @property (strong, nonatomic) NSString *progress;
+@property (strong, nonatomic) NSMutableArray *directionOfVehicle;
+@property (strong, nonatomic) IBOutlet UIButton *refreshButton;
+@property (strong, nonatomic) IBOutlet UIBarButtonItem *addToFaves;
+@property (strong, nonatomic) IBOutlet UIActivityIndicatorView *spinner;
 
 @end
 
 @implementation MapViewController
+@synthesize refreshButton = _refreshButton;
+@synthesize addToFaves = _addToFaves;
+@synthesize spinner = _spinner;
 @synthesize mapView = _mapView;
 
 @synthesize annotations = _annotations;
@@ -30,7 +38,8 @@
 @synthesize stops = _stops;
 @synthesize progress = _progress;
 @synthesize shape_lon = _shape_lon;
-@synthesize shape_lt = _shape_lt;   
+@synthesize shape_lt = _shape_lt;
+@synthesize refreshDelegate = _refreshDelegate;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -53,6 +62,10 @@
     NSMutableArray *longitude = [NSMutableArray arrayWithArray:self.shape_lon];
         for (LocationAnnotation *annotation in self.annotations){
         self.vehicleInfo = [annotation vehicleInfo];
+            if (!self.directionOfVehicle)self.directionOfVehicle = [NSMutableArray array];
+            if (![self.directionOfVehicle containsObject:[self.vehicleInfo objectForKey:DIRECTION_OF_VEHICLE]]){
+                [self.directionOfVehicle addObject:[self.vehicleInfo objectForKey:DIRECTION_OF_VEHICLE]];
+            }
     }
     NSArray* sortedlatitude = [latitude sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2){
         return ([obj1 doubleValue] < [obj2 doubleValue]);
@@ -98,29 +111,52 @@
     }
 // Making the mkpolyline with the coordinates array i made above
     MKPolyline *polyLine = [MKPolyline polylineWithCoordinates:coordinates count:numberofSteps];
-    [self.mapView addOverlay:polyLine];
+    if (![self.mapView overlays])[self.mapView addOverlay:polyLine];
+self.refreshButton.enabled = YES;
 }
 
 //setting up the annotations and customizing the rightcalloutaccessory
 - (MKAnnotationView *) mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation
 {
+    NSString *direction = [annotation subtitle];
     if (![annotation isKindOfClass:[MKUserLocation class]]){
-    MKAnnotationView *aView =[mapView dequeueReusableAnnotationViewWithIdentifier:@"Bus Coordinates"];
+    //MKAnnotationView *aView =[mapView dequeueReusableAnnotationViewWithIdentifier:@"Bus Coordinates"];
+        MKPinAnnotationView *aView = [[MKPinAnnotationView alloc]initWithAnnotation:annotation reuseIdentifier:@"Bus Coordinates"];
     if (!aView){
          aView = [[MKPinAnnotationView alloc]initWithAnnotation:annotation reuseIdentifier:@"Bus Coordinates"];
         aView.canShowCallout = YES;
     }
-    aView.annotation = annotation;
+        aView.canShowCallout = YES;
+        if ([direction isEqualToString:[self.directionOfVehicle objectAtIndex:0]])aView.pinColor = MKPinAnnotationColorPurple;
+        else aView.pinColor = MKPinAnnotationColorRed;
+        aView.annotation = annotation;
     aView.leftCalloutAccessoryView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 30, 30)];
     self.typeDetailDisclosure = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
     aView.rightCalloutAccessoryView = self.typeDetailDisclosure;
     return aView;
     }
     else return  nil;
+
 }
 
+- (IBAction)refreshMap:(id)sender {
+    [self.spinner startAnimating];
+    self.spinner.hidden = NO;
+    self.refreshButton.enabled = NO;
+    NSString *route = [self.vehicleInfo objectForKey:LINE_NAME];
+    [self updateMapView];
+    self.annotations = nil;
+    self.shape_lon = [[self.refreshDelegate refreshedAnnotations:route :self]objectAtIndex:0];
+    self.shape_lt = [[self.refreshDelegate refreshedAnnotations:route :self]objectAtIndex:1];
+    self.annotations = [[self.refreshDelegate refreshedAnnotations:route :self]objectAtIndex:2];
+    
+}
 
-
+- (void) mapView:(MKMapView *)mapView didAddAnnotationViews:(NSArray *)views
+{
+     [self.spinner stopAnimating];
+    self.spinner.hidden = YES;
+}
 
 // draw the polyline onto the map, setting line stroke width and color as well
 - (MKOverlayView *)mapView:(MKMapView *)mapView viewForOverlay:(id <MKOverlay>)overlay {
@@ -175,6 +211,7 @@
     
 }
 
+
 // seguing to a tableviewcontroller to show the stops that the selected bus makes
 - (void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
@@ -217,6 +254,7 @@
     self.navigationItem.title = title;
     if (self.shape_lon)self.shape_lon = nil;
     if (self.shape_lt) self.shape_lt = nil;
+    self.spinner.hidden = YES;
 	// Do any additional setup after loading the view.
 }
 
@@ -224,6 +262,9 @@
 {
     [self setMapView:nil];
     [self setAnnotations:nil];
+    [self setRefreshButton:nil];
+    [self setAddToFaves:nil];
+    [self setSpinner:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 }

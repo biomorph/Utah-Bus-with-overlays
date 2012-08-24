@@ -24,6 +24,7 @@
 #define STOP_POINT_REF @"StopPointName"
 #define LINE_NAME @"LineRef"
 #define VEHICLE_AT_STOP @"VehicleAtStop"
+#define UNIQUE_ID @"VehicleRef"
 
 @interface UtaFetcher:NSObject <NSXMLParserDelegate>
 @property (nonatomic, strong) NSMutableArray *vehicleInfoArray;

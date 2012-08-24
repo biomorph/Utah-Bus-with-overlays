@@ -8,24 +8,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Utah Bus/StopMapViewController.m"
-         timestampString = "367199659.844366"
+         timestampString = "367454430.553529"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "251"
-         endingLineNumber = "251">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "Utah Bus/UtaFetcher.m"
-         timestampString = "366939166.756705"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "107"
-         endingLineNumber = "107"
-         landmarkName = "-executeStopFetcher:"
-         landmarkType = "5">
+         startingLineNumber = "252"
+         endingLineNumber = "252">
       </FileBreakpoint>
    </FileBreakpoints>
    <ExceptionBreakpoints>

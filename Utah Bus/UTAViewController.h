@@ -13,10 +13,11 @@
 #import "UtaAPIKey.h"
 #import <CoreData/CoreData.h>
 #import "Reachability.h"
+#import "MapViewController.h"
 
 
 
-@interface UTAViewController : UIViewController <NSFetchedResultsControllerDelegate>//UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate
+@interface UTAViewController : UIViewController <NSFetchedResultsControllerDelegate,RefreshDelegate>//UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate
 
 @property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController; //for fetching results from coredata
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;//managed object context to access coredata

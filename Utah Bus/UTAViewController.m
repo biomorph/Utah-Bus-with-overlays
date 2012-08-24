@@ -121,6 +121,7 @@
     UINavigationController *fnvc = [self.tabBarController.viewControllers objectAtIndex:2];
     FavoritesTableViewController *fvc = (FavoritesTableViewController *)[fnvc topViewController];
     [fvc setDelegate:self];
+    
 }
 
 -(void) checkNetworkStatus:(NSNotification *)notice
@@ -244,6 +245,8 @@
     [fetchRequest setEntity:shapesEntity];
     [fetchRequest setPredicate:shapePredicate];
     NSArray *fetchedShapes = [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL];
+    self.shape_lt = nil;
+    self.shape_lon = nil;
     for (NSManagedObject *shape in fetchedShapes){
         if([[shape valueForKey:@"shape_id"] isEqualToString:shapeID]){
             [self.shape_lt addObject:[shape valueForKey:@"shape_pt_lat"]];
@@ -269,7 +272,7 @@
         }
         dispatch_async(dispatch_get_main_queue(), ^{
             NSInteger numberofcontrollers = [self.navigationController.viewControllers count];
-            if (numberofcontrollers <2&&self.vehicleInfoArray)[self performSegueWithIdentifier:@"show on map" sender:self];
+            if (numberofcontrollers <2 && self.vehicleInfoArray)[self performSegueWithIdentifier:@"show on map" sender:self];
         });
     });
     dispatch_release(xmlGetter);
@@ -279,10 +282,11 @@
 // this is the protocol method for FavoriteTableViewControllerDelegate that takes the favorite string and runs the showVehicles method and also switches the tab to the route tab and pops any other viewcontrollers in the stack, so there are no nesting mapviews.
 - (void) showFavorite:(NSString *)favorite : (FavoritesTableViewController *)sender
 {
-        self.routeName.text = favorite;
-        [self.navigationController popToViewController:self animated:YES];
-        [self.tabBarController setSelectedIndex:0];
-        [self showVehicles:sender];
+    self.routeName.text = favorite;
+    [self showVehicles:sender];    
+    [self.navigationController popToViewController:self animated:YES];
+    //[self.tabBarController setSelectedIndex:0];
+        
 
 }
 
@@ -299,6 +303,14 @@
     return annotations;
 }
 
+- (NSArray *)refreshedAnnotations:(NSString *)withRoute :(MapViewController *)sender
+{
+    self.routeName.text = withRoute;
+    [self showVehicles:sender];
+    NSArray *annotationsAndShapes = [NSArray arrayWithObjects:self.shape_lon,self.shape_lt,[self mapAnnotations], nil];
+    return annotationsAndShapes;
+}
+
 - (void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     if ([segue.identifier isEqualToString:@"show on map"]){
@@ -306,6 +318,7 @@
         [segue.destinationViewController setShape_lon:self.shape_lon];
         [segue.destinationViewController setShape_lt:self.shape_lt];
         [self.tabBarController setSelectedIndex:0];
+        [segue.destinationViewController setRefreshDelegate:self];
         self.shape_lon = nil;
         self.shape_lt = nil;
     }

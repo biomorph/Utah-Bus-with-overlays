@@ -34,6 +34,7 @@
 		078EBDD115D380D800FCA1D9 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 078EBDD015D380D700FCA1D9 /* CoreData.framework */; };
 		079E2B6815D4BFF000038EC2 /* UTAGTFS.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 079E2B6715D4BFF000038EC2 /* UTAGTFS.sqlite */; };
 		07B3BA3715D460720060EA0A /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 07B3BA3515D460720060EA0A /* Model.xcdatamodeld */; };
+		07BA275715E585FF005BC40B /* iTunesArtwork.png in Resources */ = {isa = PBXBuildFile; fileRef = 07BA275615E585FF005BC40B /* iTunesArtwork.png */; };
 		07BB7B9215CC73DA007A0531 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 07BB7B9115CC73DA007A0531 /* UIKit.framework */; };
 		07BB7B9415CC73DA007A0531 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 07BB7B9315CC73DA007A0531 /* Foundation.framework */; };
 		07BB7B9615CC73DA007A0531 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 07BB7B9515CC73DA007A0531 /* CoreGraphics.framework */; };
@@ -84,6 +85,7 @@
 		078EBDD015D380D700FCA1D9 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		079E2B6715D4BFF000038EC2 /* UTAGTFS.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = UTAGTFS.sqlite; sourceTree = "<group>"; };
 		07B3BA3615D460720060EA0A /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
+		07BA275615E585FF005BC40B /* iTunesArtwork.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iTunesArtwork.png; sourceTree = "<group>"; };
 		07BB7B8D15CC73DA007A0531 /* Utah Bus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Utah Bus.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		07BB7B9115CC73DA007A0531 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		07BB7B9315CC73DA007A0531 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -125,6 +127,7 @@
 		07BB7B8215CC73DA007A0531 = {
 			isa = PBXGroup;
 			children = (
+				07BA275615E585FF005BC40B /* iTunesArtwork.png */,
 				0748138F15E308D700B21829 /* default.png */,
 				0748139015E308D700B21829 /* default@2x.png */,
 				0748139115E308D700B21829 /* icon.png */,
@@ -224,7 +227,6 @@
 				07BB7B8915CC73DA007A0531 /* Sources */,
 				07BB7B8A15CC73DA007A0531 /* Frameworks */,
 				07BB7B8B15CC73DA007A0531 /* Resources */,
-				50524F424C454D533F /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -283,26 +285,11 @@
 				074813BC15E41E6600B21829 /* closest.png in Resources */,
 				074813BD15E41E6600B21829 /* route.png in Resources */,
 				074813BE15E41E6600B21829 /* help@2x.png in Resources */,
+				07BA275715E585FF005BC40B /* iTunesArtwork.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		50524F424C454D533F /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "export CODESIGN_ALLOCATE=/Library/JailCoder/codesign_allocate\nif [ \"${PLATFORM_NAME}\" == \"iphoneos\" ]; then\n/Library/JailCoder/Entitlements/Entitlements.py \"my.company.${PROJECT_NAME}\" \"${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}/${PROJECT_NAME}.xcent\";\ncodesign -f -s \"iPhone Developer\" --entitlements \"${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}/${PROJECT_NAME}.xcent\" \"${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}/\"\nfi";
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		07BB7B8915CC73DA007A0531 /* Sources */ = {
@@ -400,11 +387,14 @@
 		07BB7BAC15CC73DA007A0531 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Ravi Alla (BZ529BVW3Z)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Utah Bus/Utah Bus-Prefix.pch";
 				INFOPLIST_FILE = "Utah Bus/Utah Bus-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -412,6 +402,8 @@
 		07BB7BAD15CC73DA007A0531 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Utah Bus/Utah Bus-Prefix.pch";
 				INFOPLIST_FILE = "Utah Bus/Utah Bus-Info.plist";
