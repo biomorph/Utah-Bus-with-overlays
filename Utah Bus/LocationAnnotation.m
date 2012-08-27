@@ -42,6 +42,10 @@
     else return nil;
 }
 
+- (NSString *) direction
+{
+    return nil;
+}
 - (CLLocationCoordinate2D) coordinate
 {
     CLLocationCoordinate2D coordinate;

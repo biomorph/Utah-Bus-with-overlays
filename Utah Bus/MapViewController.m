@@ -11,12 +11,12 @@
 #import "UtaFetcher.h"
 #import "StopTableViewController.h"
 #import "UTAViewController.h"
+#import "timetableViewController.h"
 
 @interface MapViewController () <MKMapViewDelegate, CLLocationManagerDelegate>
 @property (strong, nonatomic) IBOutlet MKMapView *mapView;
 @property (strong, nonatomic) UIButton *typeDetailDisclosure;
 @property (strong, nonatomic) CLLocationManager *locationManager;
-@property (strong, nonatomic) NSArray *stops;
 @property (strong, nonatomic) NSString *progress;
 @property (strong, nonatomic) NSMutableArray *directionOfVehicle;
 @property (strong, nonatomic) IBOutlet UIButton *refreshButton;
@@ -37,7 +37,6 @@
 @synthesize  vehicleInfo = _vehicleInfo;
 @synthesize currentLocation = _currentLocation;
 @synthesize locationManager = _locationManager;
-@synthesize stops = _stops;
 @synthesize progress = _progress;
 @synthesize shape_lon = _shape_lon;
 @synthesize shape_lt = _shape_lt;
@@ -193,8 +192,7 @@ self.refreshButton.enabled = YES;
 {
     self.vehicleInfo = [(LocationAnnotation *)view.annotation vehicleInfo];
     if (self.vehicleInfo){
-        self.stops = [self.vehicleInfo objectForKey:STOP_POINT_REF];
-        [self performSegueWithIdentifier:@"show stops" sender:view.rightCalloutAccessoryView];
+        [self performSegueWithIdentifier:@"show timetable" sender:view.rightCalloutAccessoryView];
     }
 }
 
@@ -225,8 +223,8 @@ self.refreshButton.enabled = YES;
 // seguing to a tableviewcontroller to show the stops that the selected bus makes
 - (void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    if ([segue.identifier isEqualToString:@"show stops"]){
-        [segue.destinationViewController setStops:self.stops];
+    if ([segue.identifier isEqualToString:@"show timetable"]){
+        [segue.destinationViewController setRoute:[self.vehicleInfo objectForKey:LINE_NAME]];
     }
 }
 - (void) setMapView:(MKMapView *)mapView

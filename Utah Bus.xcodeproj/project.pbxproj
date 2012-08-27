@@ -46,6 +46,7 @@
 		07BB7BAF15CC7402007A0531 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 07BB7BAE15CC7402007A0531 /* CoreLocation.framework */; };
 		07BB7BB115CC740A007A0531 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 07BB7BB015CC740A007A0531 /* MapKit.framework */; };
 		07BB7BB715CC74FF007A0531 /* UtaFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 07BB7BB615CC74FF007A0531 /* UtaFetcher.m */; };
+		07BE44E815E8401400E757BF /* timetableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 07BE44E715E8401400E757BF /* timetableViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -104,6 +105,8 @@
 		07BB7BB415CC7489007A0531 /* UtaAPIKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UtaAPIKey.h; path = ../UtaAPIKey.h; sourceTree = "<group>"; };
 		07BB7BB515CC74FF007A0531 /* UtaFetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UtaFetcher.h; sourceTree = "<group>"; };
 		07BB7BB615CC74FF007A0531 /* UtaFetcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UtaFetcher.m; sourceTree = "<group>"; };
+		07BE44E615E8401400E757BF /* timetableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = timetableViewController.h; sourceTree = "<group>"; };
+		07BE44E715E8401400E757BF /* timetableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = timetableViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -197,6 +200,8 @@
 				07BB7BA315CC73DA007A0531 /* MainStoryboard.storyboard */,
 				0748139715E4072300B21829 /* HelpViewController.h */,
 				0748139815E4072300B21829 /* HelpViewController.m */,
+				07BE44E615E8401400E757BF /* timetableViewController.h */,
+				07BE44E715E8401400E757BF /* timetableViewController.m */,
 				07BB7BA615CC73DA007A0531 /* UTAViewController.h */,
 				07BB7BA715CC73DA007A0531 /* UTAViewController.m */,
 				07615BDD15D95328003C691C /* FavoritesTableViewController.h */,
@@ -310,6 +315,7 @@
 				0735E3D915DB09FE00BBEE9E /* StopInfoTableViewController.m in Sources */,
 				0748138915E2C9F600B21829 /* Reachability.m in Sources */,
 				0748139915E4072300B21829 /* HelpViewController.m in Sources */,
+				07BE44E815E8401400E757BF /* timetableViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
