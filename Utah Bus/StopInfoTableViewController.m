@@ -128,7 +128,7 @@ return cell;
 - (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)path
 {
     // Determine if row is selectable based on the NSIndexPath.
-    if (path.row == 1)
+    if (path.row == 2)
     {
         return path;
     }
