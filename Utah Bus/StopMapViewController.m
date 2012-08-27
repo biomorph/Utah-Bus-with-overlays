@@ -160,6 +160,7 @@ else return  nil;
 
         NSString *stopID = [self.stopInfo objectForKey:STOP_ID];
         NSString *url = [NSString stringWithFormat:@"http://api.rideuta.com/SIRI/SIRI.svc/StopMonitor?stopid=%@&minutesout=30&onwardcalls=true&filterroute=&usertoken=%@",stopID,UtaAPIKey];
+        //NSLog(@"url is %@",url);
         dispatch_queue_t xmlGetter = dispatch_queue_create("UTA xml getter", NULL);
         dispatch_async(xmlGetter, ^{
             Reachability *reachability = [Reachability reachabilityForInternetConnection];

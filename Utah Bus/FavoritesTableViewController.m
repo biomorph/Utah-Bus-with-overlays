@@ -79,6 +79,7 @@
     NSArray *favoriteRouteInfo = [self.favorites objectAtIndex:indexPath.row];
     cell.textLabel.text = [favoriteRouteInfo objectAtIndex:0];
     cell.detailTextLabel.text = [favoriteRouteInfo objectAtIndex:1];
+    [cell setAccessoryView:nil];
     return cell;
 }
 
@@ -144,6 +145,10 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    [spinner startAnimating];
+    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    [cell setAccessoryView:spinner];
     NSString *favorite = [[self.favorites objectAtIndex:indexPath.row] objectAtIndex:1];
     //sending a message to the delegate - UTAViewController asking it to showFavorite:favorite on the map
     [self.delegate showFavorite:favorite :self];

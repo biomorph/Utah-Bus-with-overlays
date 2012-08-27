@@ -12,13 +12,13 @@
 
 @interface StopInfoTableViewController ()<UITableViewDelegate, UITableViewDataSource>
 @property (nonatomic, strong) NSMutableArray *dataDisplayArray;
-@property (nonatomic,strong) NSArray *stops;
+@property (nonatomic, strong) NSString *route;
 @end
 
 @implementation StopInfoTableViewController
 
 @synthesize stopDescriptionForTable = _stopDescriptionForTable;
-@synthesize  stops = _stops;
+@synthesize route = _route;
 
 
 
@@ -70,7 +70,7 @@
 {
     if ([self.stopDescriptionForTable count]!=0){
     NSDictionary *dictionary = [self.stopDescriptionForTable objectAtIndex:section];
-    NSString *sectionTitle = [NSString stringWithFormat:@"%@-%@",[dictionary objectForKey:LINE_NAME],[dictionary objectForKey:PUBLISHED_LINE_NAME]];
+    NSString *sectionTitle = [NSString stringWithFormat:@"%@",[dictionary objectForKey:LINE_NAME]];
      return sectionTitle;
     }
     else return @"UTA RETURNED NOTHING";
@@ -87,7 +87,7 @@
     NSMutableArray *dictValues = [NSMutableArray arrayWithCapacity:3];
     if ([self.stopDescriptionForTable count]!=0){
     NSDictionary *dictionary = [self.stopDescriptionForTable objectAtIndex:indexPath.section];
-   if (indexPath.row == 1) cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+   if (indexPath.row == 2) cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
    else cell.accessoryType = UITableViewCellAccessoryNone;
     for (NSString *key in dictionary){
         if ([key isEqualToString:DIRECTION_OF_VEHICLE]){
@@ -98,26 +98,27 @@
             NSArray *keyValuePairs = [NSArray arrayWithObjects:@"Arrival Time",[NSString stringWithFormat:@"%d minutes",[[dictionary valueForKey:key]intValue]/60], nil];
             [dictValues addObject:keyValuePairs];
         }
-        else if ([key isEqualToString:STOP_POINT_REF]){
-            NSArray *keyValuePairs = [NSArray arrayWithObjects:@"Stops This Vehicle Makes",[dictionary valueForKey:key], nil];
-            [dictValues addObject:keyValuePairs];
+    }
+        if ([dictValues count]>0){
+            if (indexPath.row == 2){
+                cell.textLabel.text = @"Timetable";
+                cell.detailTextLabel.text = nil;
+            }
+            else {
+                cell.textLabel.text = [[dictValues objectAtIndex:indexPath.row] objectAtIndex:0];
+                cell.detailTextLabel.text = [[dictValues objectAtIndex:indexPath.row] objectAtIndex:1];
+            }
         }
     }
-        cell.textLabel.text = [[dictValues objectAtIndex:indexPath.row] objectAtIndex:0];
-    if ([[[dictValues objectAtIndex:indexPath.row] objectAtIndex:1] isKindOfClass:[NSString class]])
-    cell.detailTextLabel.text = [[dictValues objectAtIndex:indexPath.row] objectAtIndex:1];
-    else cell.detailTextLabel.text = nil;
-    }
-        return cell;
+return cell;
 
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSDictionary *stop = [self.stopDescriptionForTable objectAtIndex:indexPath.section];
-    NSArray *busStops = [stop objectForKey:STOP_POINT_REF];
-    self.stops = busStops;
-    if (busStops)[self performSegueWithIdentifier:@"show stops" sender:self.tableView];
+    self.route = [stop objectForKey:LINE_NAME];
+    if (self.route)[self performSegueWithIdentifier:@"show timetable" sender:self.tableView];
 }
 - (void)viewDidUnload
 {
@@ -136,8 +137,8 @@
 }
 - (void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    if ([segue.identifier isEqualToString:@"show stops"])
-        [segue.destinationViewController setStops:self.stops];
+    if ([segue.identifier isEqualToString:@"show timetable"])
+        [segue.destinationViewController setRoute:self.route];
 }
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
