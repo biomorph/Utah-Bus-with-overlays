@@ -32,7 +32,6 @@
 		07512F5715D1BF2D00FC9D84 /* StopViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 07512F5615D1BF2D00FC9D84 /* StopViewController.m */; };
 		07615BDF15D95328003C691C /* FavoritesTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 07615BDE15D95328003C691C /* FavoritesTableViewController.m */; };
 		078EBDD115D380D800FCA1D9 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 078EBDD015D380D700FCA1D9 /* CoreData.framework */; };
-		079E2B6815D4BFF000038EC2 /* UTAGTFS.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 079E2B6715D4BFF000038EC2 /* UTAGTFS.sqlite */; };
 		07B3BA3715D460720060EA0A /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 07B3BA3515D460720060EA0A /* Model.xcdatamodeld */; };
 		07BA275715E585FF005BC40B /* iTunesArtwork.png in Resources */ = {isa = PBXBuildFile; fileRef = 07BA275615E585FF005BC40B /* iTunesArtwork.png */; };
 		07BB7B9215CC73DA007A0531 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 07BB7B9115CC73DA007A0531 /* UIKit.framework */; };
@@ -47,6 +46,7 @@
 		07BB7BB115CC740A007A0531 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 07BB7BB015CC740A007A0531 /* MapKit.framework */; };
 		07BB7BB715CC74FF007A0531 /* UtaFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 07BB7BB615CC74FF007A0531 /* UtaFetcher.m */; };
 		07BE44E815E8401400E757BF /* timetableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 07BE44E715E8401400E757BF /* timetableViewController.m */; };
+		07BE44F415EBEFA500E757BF /* UTAGTFS.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 07BE44F315EBEFA500E757BF /* UTAGTFS.sqlite */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -84,7 +84,6 @@
 		07615BDD15D95328003C691C /* FavoritesTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FavoritesTableViewController.h; sourceTree = "<group>"; };
 		07615BDE15D95328003C691C /* FavoritesTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FavoritesTableViewController.m; sourceTree = "<group>"; };
 		078EBDD015D380D700FCA1D9 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
-		079E2B6715D4BFF000038EC2 /* UTAGTFS.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = UTAGTFS.sqlite; sourceTree = "<group>"; };
 		07B3BA3615D460720060EA0A /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 		07BA275615E585FF005BC40B /* iTunesArtwork.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iTunesArtwork.png; sourceTree = "<group>"; };
 		07BB7B8D15CC73DA007A0531 /* Utah Bus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Utah Bus.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -107,6 +106,7 @@
 		07BB7BB615CC74FF007A0531 /* UtaFetcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UtaFetcher.m; sourceTree = "<group>"; };
 		07BE44E615E8401400E757BF /* timetableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = timetableViewController.h; sourceTree = "<group>"; };
 		07BE44E715E8401400E757BF /* timetableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = timetableViewController.m; sourceTree = "<group>"; };
+		07BE44F315EBEFA500E757BF /* UTAGTFS.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = UTAGTFS.sqlite; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -166,6 +166,7 @@
 		07BB7B9715CC73DA007A0531 /* Utah Bus */ = {
 			isa = PBXGroup;
 			children = (
+				07BE44F315EBEFA500E757BF /* UTAGTFS.sqlite */,
 				074813AF15E41E6600B21829 /* closest@2x.png */,
 				074813B015E41E6600B21829 /* help.png */,
 				074813B115E41E6600B21829 /* route@2x.png */,
@@ -183,7 +184,6 @@
 				0735E3CE15D9CB6400BBEE9E /* UTAStopMonitoringViewController.h */,
 				0735E3CF15D9CB6400BBEE9E /* UTAStopMonitoringViewController.m */,
 				07B3BA3515D460720060EA0A /* Model.xcdatamodeld */,
-				079E2B6715D4BFF000038EC2 /* UTAGTFS.sqlite */,
 				07512F5515D1BF2D00FC9D84 /* StopViewController.h */,
 				07512F5615D1BF2D00FC9D84 /* StopViewController.m */,
 				0735E3D715DB09FE00BBEE9E /* StopInfoTableViewController.h */,
@@ -275,7 +275,6 @@
 			files = (
 				07BB7B9C15CC73DA007A0531 /* InfoPlist.strings in Resources */,
 				07BB7BA515CC73DA007A0531 /* MainStoryboard.storyboard in Resources */,
-				079E2B6815D4BFF000038EC2 /* UTAGTFS.sqlite in Resources */,
 				0735E3D315D9D1A100BBEE9E /* Salt Lake City.gpx in Resources */,
 				0748139315E308D700B21829 /* default.png in Resources */,
 				0748139415E308D700B21829 /* default@2x.png in Resources */,
@@ -291,6 +290,7 @@
 				074813BD15E41E6600B21829 /* route.png in Resources */,
 				074813BE15E41E6600B21829 /* help@2x.png in Resources */,
 				07BA275715E585FF005BC40B /* iTunesArtwork.png in Resources */,
+				07BE44F415EBEFA500E757BF /* UTAGTFS.sqlite in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
