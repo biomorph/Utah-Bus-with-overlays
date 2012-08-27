@@ -218,6 +218,7 @@
     NSString *urlString = [NSString stringWithFormat:@"http://api.rideuta.com/SIRI/SIRI.svc/VehicleMonitor/ByRoute?route=%@&onwardcalls=true&usertoken=%@",self.routeName.text,UtaAPIKey];
     
     // Here I am fetching routeID from core data entity route, based on the bus typed into the text field
+    //NSLog(@"routename is %@",self.routeName.text);
     NSString *routeID = [NSString string];
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"Routes"
@@ -229,15 +230,36 @@
     routeID = [[fetchedRoutes lastObject] valueForKey:@"route_id"];
     
     // Here I am fetching the shapeID from core data entity trips, based on the routeID I got from above
-    NSString * shapeID = [NSString string];
     NSEntityDescription *tripsEntity = [NSEntityDescription entityForName:@"Trips"
                                                    inManagedObjectContext:self.managedObjectContext];
     NSPredicate *tripPredicate = [NSPredicate predicateWithFormat:@"route_id=%@",routeID];
     [fetchRequest setEntity:tripsEntity];
     [fetchRequest setPredicate:tripPredicate];
     NSArray *fetchedTrips = [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL];
-    shapeID = [[fetchedTrips lastObject] valueForKey:@"shape_id"];
-    
+    //NSLog(@"fetchedTrip number %d",[fetchedTrips count]);
+    NSMutableArray *shape_ids = [NSMutableArray arrayWithCapacity:2];
+    for (NSManagedObject *trip in fetchedTrips){
+        if ([[trip valueForKey:@"route_id"]isEqualToString:routeID]&&![shape_ids containsObject:[trip valueForKey:@"shape_id"]]){
+            [shape_ids addObject:[trip valueForKey:@"shape_id"]];
+        }
+    }
+    if ([self.routeName.text isEqualToString:@"703"]){
+        [shape_ids removeAllObjects];
+        [shape_ids addObject:@"84349"];
+    }
+    else if ([self.routeName.text isEqualToString:@"701"]){
+        [shape_ids removeAllObjects];
+        [shape_ids addObject:@"84344"];
+    }
+    else if ([self.routeName.text isEqualToString:@"704"]){
+        [shape_ids removeAllObjects];
+        [shape_ids addObject:@"84359"];
+        
+    }
+    //NSLog(@"shape_ids %@",shape_ids);
+    self.shape_lt = nil;
+    self.shape_lon = nil;
+    for (NSString *shapeID in shape_ids){
     // Here I am fetching the shape_pt_lat and shape_pt_long from core data entity shapes, based on the shapeID I got above
     NSEntityDescription *shapesEntity = [NSEntityDescription entityForName:@"Shapes"
                                                     inManagedObjectContext:self.managedObjectContext];
@@ -245,13 +267,14 @@
     [fetchRequest setEntity:shapesEntity];
     [fetchRequest setPredicate:shapePredicate];
     NSArray *fetchedShapes = [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL];
-    self.shape_lt = nil;
-    self.shape_lon = nil;
+    
     for (NSManagedObject *shape in fetchedShapes){
         if([[shape valueForKey:@"shape_id"] isEqualToString:shapeID]){
             [self.shape_lt addObject:[shape valueForKey:@"shape_pt_lat"]];
             [self.shape_lon addObject:[shape valueForKey:@"shape_pt_lon"]];
+           // NSLog(@"%@,%@,%@",[shape valueForKey:@"shape_id"],[shape valueForKey:@"shape_pt_lat"],[shape valueForKey:@"shape_pt_lon"]);
         }
+    }
     }
 
     dispatch_queue_t xmlGetter = dispatch_queue_create("UTA xml getter", NULL);
