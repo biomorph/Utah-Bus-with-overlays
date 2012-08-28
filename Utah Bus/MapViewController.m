@@ -24,6 +24,8 @@
 @property (strong, nonatomic) IBOutlet UIActivityIndicatorView *spinner;
 @property (nonatomic) MKCoordinateRegion defaultZoom;
 @property (nonatomic) MKCoordinateRegion currentZoom;
+@property (nonatomic, strong) NSString *direction;
+@property (nonatomic) BOOL refreshPressed;
 
 @end
 
@@ -32,6 +34,7 @@
 @synthesize addToFaves = _addToFaves;
 @synthesize spinner = _spinner;
 @synthesize mapView = _mapView;
+@synthesize direction = _direction;
 
 @synthesize annotations = _annotations;
 @synthesize  vehicleInfo = _vehicleInfo;
@@ -89,7 +92,7 @@
     if (!self.currentZoom.span.latitudeDelta)self.currentZoom = zoomRegion;
     [self.mapView setRegion:self.currentZoom animated:YES];
     }
-
+    else if (self.refreshPressed) [self.mapView setRegion:self.currentZoom animated:YES];
 // protecting against a crash when utafetcher returns empty stuff for whatever reason
     else {
     MKCoordinateRegion zoomRegion;
@@ -130,7 +133,9 @@ self.refreshButton.enabled = YES;
         aView.canShowCallout = YES;
     }
         aView.canShowCallout = YES;
-        if ([direction isEqualToString:[self.directionOfVehicle objectAtIndex:0]])aView.pinColor = MKPinAnnotationColorPurple;
+        if ([direction isEqualToString:[self.directionOfVehicle objectAtIndex:0]]){
+            aView.pinColor = MKPinAnnotationColorPurple;
+        }
         else aView.pinColor = MKPinAnnotationColorRed;
         aView.annotation = annotation;
     aView.leftCalloutAccessoryView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 30, 30)];
@@ -145,16 +150,18 @@ self.refreshButton.enabled = YES;
 - (IBAction)refreshMap:(id)sender {
     [self.spinner startAnimating];
     self.spinner.hidden = NO;
+    self.currentZoom = self.mapView.region;
+    self.refreshPressed = YES;
     NSString *route = [self.vehicleInfo objectForKey:LINE_NAME];
-    NSArray *refreshedShapeLon = [[self.refreshDelegate refreshedAnnotations:route :self]objectAtIndex:0];
-     NSArray *refreshedShapeLat = [[self.refreshDelegate refreshedAnnotations:route :self]objectAtIndex:1];
-   NSArray *refreshedAnnotations = [[self.refreshDelegate refreshedAnnotations:route :self]objectAtIndex:2];
-    if ([refreshedAnnotations count]&&[refreshedShapeLat count]&&[refreshedShapeLon count]){
-        self.shape_lon = [refreshedShapeLon mutableCopy];
-        self.shape_lt = [refreshedShapeLat mutableCopy];
+    //NSArray *refreshedShapeLon = [[self.refreshDelegate refreshedAnnotations:route :self]objectAtIndex:0];
+     //NSArray *refreshedShapeLat = [[self.refreshDelegate refreshedAnnotations:route :self]objectAtIndex:1];
+   NSArray *refreshedAnnotations = [self.refreshDelegate refreshedAnnotations:route :self];
+    if ([refreshedAnnotations count]){//&&[refreshedShapeLat count]&&[refreshedShapeLon count]){
+        //self.shape_lon = [refreshedShapeLon mutableCopy];
+        //self.shape_lt = [refreshedShapeLat mutableCopy];
         self.annotations = refreshedAnnotations;
     }
-    
+    self.refreshPressed = NO;
 }
 
 - (void) mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated
@@ -193,11 +200,12 @@ self.refreshButton.enabled = YES;
     self.vehicleInfo = [(LocationAnnotation *)view.annotation vehicleInfo];
     if (self.vehicleInfo){
         [self performSegueWithIdentifier:@"show timetable" sender:view.rightCalloutAccessoryView];
-    }
+        }
 }
 
+
 // assigning a colored dot based on the current progress of the bus
-- (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view
+- (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKPinAnnotationView *)view
 {
     self.vehicleInfo = [(LocationAnnotation *)view.annotation vehicleInfo];
     NSString *progress = [self.vehicleInfo objectForKey:PROGRESS_RATE];
@@ -216,6 +224,8 @@ self.refreshButton.enabled = YES;
     CGContextStrokePath(UIGraphicsGetCurrentContext());
     UIImage *progressImage = UIGraphicsGetImageFromCurrentImageContext();
     [(UIImageView*)view.leftCalloutAccessoryView setImage:progressImage];
+    if (view.pinColor==MKPinAnnotationColorRed)self.direction = @"1";
+    else self.direction = @"0";
     
 }
 
@@ -225,6 +235,7 @@ self.refreshButton.enabled = YES;
 {
     if ([segue.identifier isEqualToString:@"show timetable"]){
         [segue.destinationViewController setRoute:[self.vehicleInfo objectForKey:LINE_NAME]];
+        [segue.destinationViewController setVehicleDirection:self.direction];
     }
 }
 - (void) setMapView:(MKMapView *)mapView

@@ -393,14 +393,14 @@
 		07BB7BAC15CC73DA007A0531 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Ravi Alla (BZ529BVW3Z)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Ravi Alla (BZ529BVW3Z)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Utah Bus/Utah Bus-Prefix.pch";
 				INFOPLIST_FILE = "Utah Bus/Utah Bus-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "31201DCC-2B55-4115-848F-35F11D73A32C";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;

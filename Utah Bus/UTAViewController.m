@@ -25,6 +25,7 @@
 @property (nonatomic, strong) NSMutableArray *routeNames;
 @property (nonatomic, strong) NSMutableArray *autoCompleteRouteNames;
 @property BOOL internetActive;
+@property (nonatomic) BOOL refreshPressed;
 @end
 
 @implementation UTAViewController
@@ -219,6 +220,7 @@
     
     // Here I am fetching routeID from core data entity route, based on the bus typed into the text field
     //NSLog(@"routename is %@",self.routeName.text);
+    if (!self.refreshPressed){
     NSString *routeID = [NSString string];
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"Routes"
@@ -237,29 +239,37 @@
     [fetchRequest setPredicate:tripPredicate];
     NSArray *fetchedTrips = [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL];
     //NSLog(@"fetchedTrip number %d",[fetchedTrips count]);
-    NSMutableArray *shape_ids = [NSMutableArray arrayWithCapacity:2];
+    NSCountedSet *shape_ids = [NSCountedSet set];
+    NSMutableArray *unique_shape_ids = [NSMutableArray array];
     for (NSManagedObject *trip in fetchedTrips){
-        if ([[trip valueForKey:@"route_id"]isEqualToString:routeID]&&![shape_ids containsObject:[trip valueForKey:@"shape_id"]]){
+        if ([[trip valueForKey:@"route_id"]isEqualToString:routeID]){
             [shape_ids addObject:[trip valueForKey:@"shape_id"]];
+            if (![unique_shape_ids containsObject:[trip valueForKey:@"shape_id"]])[unique_shape_ids addObject:[trip valueForKey:@"shape_id"]];
         }
     }
-    if ([self.routeName.text isEqualToString:@"703"]){
-        [shape_ids removeAllObjects];
-        [shape_ids addObject:@"84349"];
+    NSString *highest_count_shape_id = [NSString string];
+    NSUInteger maxcount=0;
+    for (NSString *shape_id in unique_shape_ids){
+        if (maxcount<[shape_ids countForObject:shape_id]) {
+            maxcount = [shape_ids countForObject:shape_id];
+            highest_count_shape_id = shape_id;
+        }
     }
-    else if ([self.routeName.text isEqualToString:@"701"]){
-        [shape_ids removeAllObjects];
-        [shape_ids addObject:@"84344"];
+    [unique_shape_ids removeObject:highest_count_shape_id];
+    maxcount = 0;
+    NSString *second_highest_count_shape_id;
+    for (NSString *shape_id in unique_shape_ids){
+        if (maxcount<[shape_ids countForObject:shape_id]) {
+            maxcount = [shape_ids countForObject:shape_id];
+            second_highest_count_shape_id = shape_id;
+        }
     }
-    else if ([self.routeName.text isEqualToString:@"704"]){
-        [shape_ids removeAllObjects];
-        [shape_ids addObject:@"84359"];
-        
-    }
-    //NSLog(@"shape_ids %@",shape_ids);
+    [unique_shape_ids removeAllObjects];
+    [unique_shape_ids addObject:highest_count_shape_id];
+    [unique_shape_ids addObject:second_highest_count_shape_id];
     self.shape_lt = nil;
     self.shape_lon = nil;
-    for (NSString *shapeID in shape_ids){
+    for (NSString *shapeID in unique_shape_ids){
     // Here I am fetching the shape_pt_lat and shape_pt_long from core data entity shapes, based on the shapeID I got above
     NSEntityDescription *shapesEntity = [NSEntityDescription entityForName:@"Shapes"
                                                     inManagedObjectContext:self.managedObjectContext];
@@ -268,15 +278,14 @@
     [fetchRequest setPredicate:shapePredicate];
     NSArray *fetchedShapes = [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL];
     
-    for (NSManagedObject *shape in fetchedShapes){
-        if([[shape valueForKey:@"shape_id"] isEqualToString:shapeID]){
+        for (NSManagedObject *shape in fetchedShapes){
+            if([[shape valueForKey:@"shape_id"] isEqualToString:shapeID]){
             [self.shape_lt addObject:[shape valueForKey:@"shape_pt_lat"]];
             [self.shape_lon addObject:[shape valueForKey:@"shape_pt_lon"]];
-           // NSLog(@"%@,%@,%@",[shape valueForKey:@"shape_id"],[shape valueForKey:@"shape_pt_lat"],[shape valueForKey:@"shape_pt_lon"]);
+            }
         }
     }
     }
-
     dispatch_queue_t xmlGetter = dispatch_queue_create("UTA xml getter", NULL);
     dispatch_async(xmlGetter, ^{
         Reachability *reachability = [Reachability reachabilityForInternetConnection];
@@ -328,10 +337,11 @@
 
 - (NSArray *)refreshedAnnotations:(NSString *)withRoute :(MapViewController *)sender
 {
+    self.refreshPressed = YES;
     self.routeName.text = withRoute;
     [self showVehicles:sender];
-    NSArray *annotationsAndShapes = [NSArray arrayWithObjects:self.shape_lon,self.shape_lt,[self mapAnnotations], nil];
-    return annotationsAndShapes;
+    self.refreshPressed = NO;
+    return [self mapAnnotations];
 }
 
 - (void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
