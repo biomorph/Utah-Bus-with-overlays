@@ -164,6 +164,7 @@ self.refreshButton.enabled = YES;
     if ([refreshedAnnotations count]){//&&[refreshedShapeLat count]&&[refreshedShapeLon count]){
         //self.shape_lon = [refreshedShapeLon mutableCopy];
         //self.shape_lt = [refreshedShapeLat mutableCopy];
+        //NSLog(@"number of annotations %d",[refreshedAnnotations count]);
         self.annotations = refreshedAnnotations;
     }
     self.refreshPressed = NO;
