@@ -58,10 +58,13 @@
 -(void) updateMapView
 {
     if (self.mapView.annotations)[self.mapView removeAnnotations:self.mapView.annotations];
-    if (self.annotations)[self.mapView addAnnotations:self.annotations];
+    if (self.annotations){
+        [self updateLocation];
+        [self.mapView addAnnotations:self.annotations];
+    }
    
 // Setting the initial zoom based on the highest and lowest values of the latitudes and longitudes of the buses' locations
-    if ([self.annotations count]!= 0 && [self.shape_lon count]!=0){
+    if ([self.annotations count]!= 0)/* && [self.shape_lon count]!=0)*/{
         NSMutableArray *latitude = [NSMutableArray arrayWithArray:self.shape_lt];
     NSMutableArray *longitude = [NSMutableArray arrayWithArray:self.shape_lon];
         for (LocationAnnotation *annotation in self.annotations){
@@ -78,6 +81,7 @@
     NSArray* sortedlongitude = [longitude sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2){
         return ([obj1 doubleValue] < [obj2 doubleValue]);
     }];
+        if ([self.shape_lon count]!=0){
     MKCoordinateRegion zoomRegion;
     zoomRegion.center.latitude = ([[sortedlatitude objectAtIndex:0] doubleValue]+[[sortedlatitude lastObject]doubleValue])/2;
     zoomRegion.center.longitude = ([[sortedlongitude objectAtIndex:0]doubleValue]+[[sortedlongitude lastObject]doubleValue])/2;
@@ -93,6 +97,7 @@
     [self.mapView setRegion:self.currentZoom animated:YES];
     }
     else if (self.refreshPressed) [self.mapView setRegion:self.currentZoom animated:YES];
+    }
 // protecting against a crash when utafetcher returns empty stuff for whatever reason
     else {
     MKCoordinateRegion zoomRegion;
@@ -143,7 +148,7 @@ self.refreshButton.enabled = YES;
     aView.rightCalloutAccessoryView = self.typeDetailDisclosure;
     return aView;
     }
-    else return  nil;
+    else return nil;
 
 }
 
@@ -162,6 +167,7 @@ self.refreshButton.enabled = YES;
         self.annotations = refreshedAnnotations;
     }
     self.refreshPressed = NO;
+    [self viewDidLoad];
 }
 
 - (void) mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated
@@ -247,7 +253,7 @@ self.refreshButton.enabled = YES;
 - (void) setAnnotations:(NSArray *)annotations
 {
     _annotations = annotations;
-    [self updateMapView];
+  [self updateMapView];
 }
 
 - (CLLocationManager *) locationManager
@@ -259,15 +265,20 @@ self.refreshButton.enabled = YES;
 }
 
 // In here I am getting the users current location
-- (void)viewDidLoad
+
+- (void)updateLocation
 {
-    [super viewDidLoad];
     self.mapView.delegate = self;
     self.locationManager.delegate = self;
     self.locationManager.distanceFilter = kCLDistanceFilterNone; // whenever we move
     self.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters; // 10 m
     [self.locationManager startUpdatingLocation];
     [self.mapView setShowsUserLocation:YES];
+}
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    [self updateLocation];
     LocationAnnotation *la = (LocationAnnotation *) [self.annotations lastObject];
     NSString *title= la.title;
     self.navigationItem.title = title;

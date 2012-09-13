@@ -121,7 +121,7 @@
     self.infoView.hidden = YES;*/
     UINavigationController *fnvc = [self.tabBarController.viewControllers objectAtIndex:2];
     FavoritesTableViewController *fvc = (FavoritesTableViewController *)[fnvc topViewController];
-    [fvc setDelegate:self];
+    [fvc setRouteDelegate:self];
     
 }
 
@@ -220,7 +220,7 @@
     
     // Here I am fetching routeID from core data entity route, based on the bus typed into the text field
     //NSLog(@"routename is %@",self.routeName.text);
-    if (!self.refreshPressed){
+if (!self.refreshPressed){
     NSString *routeID = [NSString string];
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"Routes"
@@ -240,6 +240,7 @@
     NSArray *fetchedTrips = [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL];
     //NSLog(@"fetchedTrip number %d",[fetchedTrips count]);
     NSCountedSet *shape_ids = [NSCountedSet set];
+
     NSMutableArray *unique_shape_ids = [NSMutableArray array];
     for (NSManagedObject *trip in fetchedTrips){
         if ([[trip valueForKey:@"route_id"]isEqualToString:routeID]){
@@ -247,6 +248,7 @@
             if (![unique_shape_ids containsObject:[trip valueForKey:@"shape_id"]])[unique_shape_ids addObject:[trip valueForKey:@"shape_id"]];
         }
     }
+    if ([unique_shape_ids count]>0){
     NSString *highest_count_shape_id = [NSString string];
     NSUInteger maxcount=0;
     for (NSString *shape_id in unique_shape_ids){
@@ -267,6 +269,7 @@
     [unique_shape_ids removeAllObjects];
     [unique_shape_ids addObject:highest_count_shape_id];
     [unique_shape_ids addObject:second_highest_count_shape_id];
+    }
     self.shape_lt = nil;
     self.shape_lon = nil;
     for (NSString *shapeID in unique_shape_ids){
@@ -285,7 +288,7 @@
             }
         }
     }
-    }
+}
     dispatch_queue_t xmlGetter = dispatch_queue_create("UTA xml getter", NULL);
     dispatch_async(xmlGetter, ^{
         Reachability *reachability = [Reachability reachabilityForInternetConnection];
@@ -312,9 +315,9 @@
 }
 
 // this is the protocol method for FavoriteTableViewControllerDelegate that takes the favorite string and runs the showVehicles method and also switches the tab to the route tab and pops any other viewcontrollers in the stack, so there are no nesting mapviews.
-- (void) showFavorite:(NSString *)favorite : (FavoritesTableViewController *)sender
+- (void) showFavoriteRoute:(NSString *)favoriteRoute :(FavoritesTableViewController *)sender
 {
-    self.routeName.text = favorite;
+    self.routeName.text = favoriteRoute;
     [self showVehicles:sender];    
     [self.navigationController popToViewController:self animated:YES];
     //[self.tabBarController setSelectedIndex:0];

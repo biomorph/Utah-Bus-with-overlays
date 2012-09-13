@@ -401,6 +401,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "31201DCC-2B55-4115-848F-35F11D73A32C";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "31201DCC-2B55-4115-848F-35F11D73A32C";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -409,13 +410,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Ravi Alla";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Ravi Alla";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Utah Bus/Utah Bus-Prefix.pch";
 				INFOPLIST_FILE = "Utah Bus/Utah Bus-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "A26361B6-1E32-4039-BA11-1AC123E343B3";
+				PROVISIONING_PROFILE = "C49B71E2-BA55-48B1-997E-EC62A0EF89CA";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "C49B71E2-BA55-48B1-997E-EC62A0EF89CA";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
