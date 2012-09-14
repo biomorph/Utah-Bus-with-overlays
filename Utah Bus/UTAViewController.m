@@ -341,8 +341,8 @@ if (!self.refreshPressed){
 - (NSArray *)refreshedAnnotations:(NSString *)withRoute :(MapViewController *)sender
 {
     self.refreshPressed = YES;
-    self.routeName.text = withRoute;
-    [self showVehicles:sender];
+    NSString *urlString = [NSString stringWithFormat:@"http://api.rideuta.com/SIRI/SIRI.svc/VehicleMonitor/ByRoute?route=%@&onwardcalls=true&usertoken=%@",withRoute,UtaAPIKey];
+    self.vehicleInfoArray = [self.utaFetcher executeUtaFetcher:urlString];
     self.refreshPressed = NO;
     return [self mapAnnotations];
 }

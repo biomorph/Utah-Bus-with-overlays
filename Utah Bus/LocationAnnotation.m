@@ -34,9 +34,9 @@
         return [self.vehicleInfo objectForKey:DIRECTION_OF_VEHICLE];
     }
     else if ([self.vehicleInfo objectForKey:STOP_DIRECTION]){
-        NSString * distance = [self.vehicleInfo objectForKey:DISTANCE_TO_STOP];
-        double distanceInMiles = [distance doubleValue]/5280.0;
-        NSString *subtitle = [NSString stringWithFormat:@"Stop is %.2f miles away %@",distanceInMiles,[self.vehicleInfo objectForKey:STOP_DIRECTION]];
+        //NSString * distance = [self.vehicleInfo objectForKey:DISTANCE_TO_STOP];
+        //double distanceInMiles = [distance doubleValue]/5280.0;
+        NSString *subtitle = [NSString stringWithFormat:@"%@",/*distanceInMiles,*/[self.vehicleInfo objectForKey:STOP_DIRECTION]];
         return subtitle;
     }
     else return nil;

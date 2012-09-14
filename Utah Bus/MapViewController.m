@@ -19,9 +19,7 @@
 @property (strong, nonatomic) CLLocationManager *locationManager;
 @property (strong, nonatomic) NSString *progress;
 @property (strong, nonatomic) NSMutableArray *directionOfVehicle;
-@property (strong, nonatomic) IBOutlet UIButton *refreshButton;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *addToFaves;
-@property (strong, nonatomic) IBOutlet UIActivityIndicatorView *spinner;
 @property (nonatomic) MKCoordinateRegion defaultZoom;
 @property (nonatomic) MKCoordinateRegion currentZoom;
 @property (nonatomic, strong) NSString *direction;
@@ -30,9 +28,7 @@
 @end
 
 @implementation MapViewController
-@synthesize refreshButton = _refreshButton;
 @synthesize addToFaves = _addToFaves;
-@synthesize spinner = _spinner;
 @synthesize mapView = _mapView;
 @synthesize direction = _direction;
 
@@ -123,7 +119,6 @@
 // Making the mkpolyline with the coordinates array i made above
     MKPolyline *polyLine = [MKPolyline polylineWithCoordinates:coordinates count:numberofSteps];
     if (![self.mapView overlays])[self.mapView addOverlay:polyLine];
-self.refreshButton.enabled = YES;
 }
 
 //setting up the annotations and customizing the rightcalloutaccessory
@@ -152,9 +147,7 @@ self.refreshButton.enabled = YES;
 
 }
 
-- (IBAction)refreshMap:(id)sender {
-    [self.spinner startAnimating];
-    self.spinner.hidden = NO;
+- (void)refreshMap:(id)sender {
     self.currentZoom = self.mapView.region;
     self.refreshPressed = YES;
     NSString *route = [self.vehicleInfo objectForKey:LINE_NAME];
@@ -168,17 +161,11 @@ self.refreshButton.enabled = YES;
         self.annotations = refreshedAnnotations;
     }
     self.refreshPressed = NO;
-    [self viewDidLoad];
 }
 
 - (void) mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated
 {
     self.currentZoom = mapView.region;
-}
-- (void) mapView:(MKMapView *)mapView didAddAnnotationViews:(NSArray *)views
-{
-     [self.spinner stopAnimating];
-    self.spinner.hidden = YES;
 }
 
 // draw the polyline onto the map, setting line stroke width and color as well
@@ -285,7 +272,6 @@ self.refreshButton.enabled = YES;
     self.navigationItem.title = title;
     if (self.shape_lon)self.shape_lon = nil;
     if (self.shape_lt) self.shape_lt = nil;
-    self.spinner.hidden = YES;
 	// Do any additional setup after loading the view.
 }
 
@@ -293,13 +279,26 @@ self.refreshButton.enabled = YES;
 {
     [self setMapView:nil];
     [self setAnnotations:nil];
-    [self setRefreshButton:nil];
     [self setAddToFaves:nil];
-    [self setSpinner:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 }
-
+- (void) viewWillAppear:(BOOL)animated
+{
+    NSMutableArray *buttons = [[NSMutableArray alloc] initWithCapacity:3];
+    
+    // Create a standard refresh button.
+    UIBarButtonItem *bi = [[UIBarButtonItem alloc]
+                           initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(refreshMap:)];
+    [buttons addObject:bi];
+    // Add profile button.
+    bi = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemBookmarks target:self action:@selector(addToFavorites:)];
+    bi.style = UIBarButtonItemStyleBordered;
+    [buttons addObject:bi];
+    
+    // Add buttons to toolbar and toolbar to nav bar.
+    self.navigationItem.rightBarButtonItems=buttons;
+}
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return YES;
