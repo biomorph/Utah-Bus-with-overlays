@@ -267,9 +267,6 @@
 {
     [super viewDidLoad];
     [self updateLocation];
-    LocationAnnotation *la = (LocationAnnotation *) [self.annotations lastObject];
-    NSString *title= la.title;
-    self.navigationItem.title = title;
     if (self.shape_lon)self.shape_lon = nil;
     if (self.shape_lt) self.shape_lt = nil;
 	// Do any additional setup after loading the view.
@@ -285,6 +282,16 @@
 }
 - (void) viewWillAppear:(BOOL)animated
 {
+    LocationAnnotation *la = (LocationAnnotation *) [self.annotations lastObject];
+    NSString *title= la.title;
+    self.navigationItem.title = title;
+    UILabel* tlabel=[[UILabel alloc] initWithFrame:CGRectMake(0,0, 150, 40)];
+    tlabel.text=self.navigationItem.title;
+    tlabel.textColor=[UIColor whiteColor];
+    tlabel.backgroundColor =[UIColor clearColor];
+    tlabel.adjustsFontSizeToFitWidth=YES;
+    [tlabel setTextAlignment:NSTextAlignmentCenter];
+    self.navigationItem.titleView=tlabel;
     NSMutableArray *buttons = [[NSMutableArray alloc] initWithCapacity:3];
     
     // Create a standard refresh button.

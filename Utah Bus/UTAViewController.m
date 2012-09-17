@@ -197,17 +197,11 @@
 
 //This method dismisses the onscreen keyboard when touched away from text field
 - (void)touchesEnded: (NSSet *)touches withEvent: (UIEvent *)event {
-    UITouch *touch = [[touches allObjects] lastObject];
-    
-    for (UIView* view in self.view.subviews) {
-        
-        if ([[self.view.subviews lastObject] isKindOfClass:[UITableView class]]&&[touch tapCount]==2)
-            self.autocompleteTableView.hidden = YES;
-        if ([view isKindOfClass:[UITextField class]])
-            
-            [view resignFirstResponder];
-        
+    UITouch *touch = [[event allTouches] anyObject];
+    if ([self.routeName isFirstResponder] && [touch view] != self.routeName) {
+        [self.routeName resignFirstResponder];
     }
+    [super touchesBegan:touches withEvent:event];
 }
 
 //fetches the xml from UTA API website when show vehicles button is pressed
@@ -294,7 +288,12 @@ if (!self.refreshPressed){
         Reachability *reachability = [Reachability reachabilityForInternetConnection];
         NetworkStatus internetStatus = [reachability currentReachabilityStatus];
         if (internetStatus != NotReachable) {
-        self.vehicleInfoArray = [self.utaFetcher executeUtaFetcher:urlString];
+            int retryNumber = 0;
+            self.vehicleInfoArray = nil;
+            while (retryNumber <=2 && [self.vehicleInfoArray count]==0){
+            self.vehicleInfoArray = [self.utaFetcher executeUtaFetcher:urlString];
+                retryNumber++;
+            }
         [spinner stopAnimating];
         }
         else {
@@ -341,8 +340,13 @@ if (!self.refreshPressed){
 - (NSArray *)refreshedAnnotations:(NSString *)withRoute :(MapViewController *)sender
 {
     self.refreshPressed = YES;
+    self.vehicleInfoArray = nil;
+    int retryNumber=0;
     NSString *urlString = [NSString stringWithFormat:@"http://api.rideuta.com/SIRI/SIRI.svc/VehicleMonitor/ByRoute?route=%@&onwardcalls=true&usertoken=%@",withRoute,UtaAPIKey];
-    self.vehicleInfoArray = [self.utaFetcher executeUtaFetcher:urlString];
+    while (retryNumber <=2 && [self.vehicleInfoArray count]==0) {
+         self.vehicleInfoArray = [self.utaFetcher executeUtaFetcher:urlString];
+        retryNumber++;
+    }
     self.refreshPressed = NO;
     return [self mapAnnotations];
 }
